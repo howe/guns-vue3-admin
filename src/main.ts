@@ -1,3 +1,7 @@
+/*
+ * @Author: nxy
+ * @Date: 2022-10-09 09:56:08
+ */
 import 'virtual:windi-base.css';
 import 'virtual:windi-components.css';
 import '/@/design/index.less';
@@ -14,8 +18,11 @@ import { setupStore } from '/@/store';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
-
+import './styles/index.less';
 import { isDevMode } from './utils/env';
+import * as antIcons from '@ant-design/icons-vue';
+import Antd from 'ant-design-vue'; //引入组件库
+import 'ant-design-vue/dist/antd.css';
 
 if (isDevMode()) {
   import('ant-design-vue/es/style');
@@ -60,6 +67,13 @@ async function bootstrap() {
 
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
+  app.use(Antd);
+
+  // 注册图标组件到全局
+  Object.keys(antIcons).forEach(key => {
+    app.component(key, antIcons[key]);
+  });
+  app.config.globalProperties.$antIcons = antIcons;
 
   app.mount('#app');
 }

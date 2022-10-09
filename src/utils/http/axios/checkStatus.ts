@@ -1,3 +1,7 @@
+/*
+ * @Author: nxy
+ * @Date: 2022-10-09 09:56:08
+ */
 import type { ErrorMessageMode } from '/#/axios';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -15,6 +19,7 @@ export function checkStatus(
   status: number,
   msg: string,
   errorMessageMode: ErrorMessageMode = 'message',
+  errorData: any,
 ): void {
   const { t } = useI18n();
   const userStore = useUserStoreWithOut();
@@ -50,7 +55,7 @@ export function checkStatus(
       errMessage = t('sys.api.errMsg408');
       break;
     case 500:
-      errMessage = t('sys.api.errMsg500');
+      errMessage = errorData.message ? errorData.message : t('sys.api.errMsg500');
       break;
     case 501:
       errMessage = t('sys.api.errMsg501');
