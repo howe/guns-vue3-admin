@@ -1,3 +1,7 @@
+<!--
+ * @Author: nxy
+ * @Date: 2022-10-09 09:56:08
+-->
 <script lang="ts">
   import { defineComponent, computed, unref } from 'vue';
   import { BackTop } from 'ant-design-vue';
@@ -10,12 +14,12 @@
   import { SettingButtonPositionEnum } from '/@/enums/appEnum';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
-  import SessionTimeoutLogin from '/@/views/sys/login/SessionTimeoutLogin.vue';
+  import SessionTimeoutLogin from '/@/views/system/login/SessionTimeoutLogin.vue';
   export default defineComponent({
     name: 'LayoutFeatures',
     components: {
       BackTop,
-      LayoutLockPage: createAsyncComponent(() => import('/@/views/sys/lock/index.vue')),
+      LayoutLockPage: createAsyncComponent(() => import('/@/views/system/lock/index.vue')),
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue')),
       SessionTimeoutLogin,
     },
