@@ -155,11 +155,7 @@
   // 重置
   const reset = () => {};
 
-  const [registerTable, { expandAll, collapseAll }] = useTable({
-    afterFetch: (data) => {
-        // console.log(tableRef.value);
-    }
-  });
+  const [registerTable, { expandAll, collapseAll }] = useTable({});
 </script>
 
 <style></style>
