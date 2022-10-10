@@ -187,7 +187,7 @@ export function useTableScroll(
     }
 
     // TODO props ?? 0;
-    const NORMAL_WIDTH = 150;
+    const NORMAL_WIDTH = 50;
 
     const columns = unref(columnsRef).filter((item) => !item.defaultHidden);
     columns.forEach((item) => {
