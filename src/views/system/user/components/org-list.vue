@@ -45,12 +45,16 @@
         :default-expand-all="true"
       />
     </a-card>
+
+    <!-- 编辑弹窗 -->
+    <org-edit v-model:visible="showEdit" :isUpdate="updateOrg" v-if="showEdit" :data="currentOrgInfo" @done="reload" :org-list="orgList" defaultKey="1"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { UserApi } from '/@/api/sys/user/UserApi';
+  import { UserApi } from '/@/api/system/user/UserApi';
   import { ref, onMounted, nextTick, createVNode } from 'vue';
+  import OrgEdit from '/@/views/system/organization/org-edit.vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { message, Modal } from 'ant-design-vue';
   const props = defineProps<{

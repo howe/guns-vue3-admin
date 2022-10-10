@@ -32,7 +32,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static addUser(params) {
-    return defHttp.post({ url: '/sysUser/add', params });
+    return defHttp.post({ url: '/sysUser/add', params }, { isTransformResponse: false });
   }
 
   /**
@@ -42,7 +42,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static editUser(params) {
-    return defHttp.post({ url: '/sysUser/edit', params });
+    return defHttp.post({ url: '/sysUser/edit', params }, { isTransformResponse: false });
   }
 
   /**
@@ -52,7 +52,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static changeStatus(params) {
-    return defHttp.post({ url: '/sysUser/changeStatus', params });
+    return defHttp.post({ url: '/sysUser/changeStatus', params }, { isTransformResponse: false });
   }
 
   /**
@@ -62,7 +62,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static unFreezeUser(params) {
-    return defHttp.post({ url: '/cancelFreeze', params });
+    return defHttp.post({ url: '/cancelFreeze', params }, { isTransformResponse: false });
   }
 
   /**
@@ -72,7 +72,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static resetPwd(params) {
-    return defHttp.post({ url: '/sysUser/resetPwd', params });
+    return defHttp.post({ url: '/sysUser/resetPwd', params }, { isTransformResponse: false });
   }
 
   /**
@@ -82,7 +82,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static deleteUser(params) {
-    return defHttp.post({ url: '/sysUser/delete', params });
+    return defHttp.post({ url: '/sysUser/delete', params }, { isTransformResponse: false });
   }
 
   /**
@@ -134,7 +134,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static addOrg(params) {
-    return defHttp.post({ url: '/hrOrganization/add', params });
+    return defHttp.post({ url: '/hrOrganization/add', params }, { isTransformResponse: false });
   }
 
   /**
@@ -144,7 +144,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static editOrg(params) {
-    return defHttp.post({ url: '/hrOrganization/edit', params });
+    return defHttp.post({ url: '/hrOrganization/edit', params }, { isTransformResponse: false });
   }
 
   /**
@@ -154,7 +154,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static deleteOrg(params) {
-    return defHttp.post({ url: '/hrOrganization/delete', params });
+    return defHttp.post({ url: '/hrOrganization/delete', params }, { isTransformResponse: false });
   }
 
   // -----授权角色界面使用------
@@ -187,7 +187,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static grantRoles(params) {
-    return defHttp.post({ url: '/sysUser/grantRole', params });
+    return defHttp.post({ url: '/sysUser/grantRole', params }, { isTransformResponse: false });
   }
 
   // -----授权数据界面使用------
@@ -208,7 +208,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static granData(params) {
-    return defHttp.post({ url: '/sysUser/grantData', params });
+    return defHttp.post({ url: '/sysUser/grantData', params },  { isTransformResponse: false });
   }
 
   // -----在线用户界面使用------
@@ -219,7 +219,7 @@ export class UserApi {
    * @date 2021/4/13 14:47
    */
   static kickOff(params) {
-    return defHttp.post({ url: '/sysUser/removeSession', params });
+    return defHttp.post({ url: '/sysUser/removeSession', params },  { isTransformResponse: false });
   }
 
   /**
@@ -239,7 +239,7 @@ export class UserApi {
    * @date 2021/4/13 14:47
    */
   static bindUserList(params) {
-    return defHttp.post({ url: '/hrOrgApprover/bindUserList', params });
+    return defHttp.post({ url: '/hrOrgApprover/bindUserList', params }, { isTransformResponse: false });
   }
 
   /**
@@ -249,6 +249,6 @@ export class UserApi {
    * @date 2021/4/13 14:47
    */
   static hrOrgApproverDelete(params) {
-    return defHttp.post({ url: '/hrOrgApprover/delete', params });
+    return defHttp.post({ url: '/hrOrgApprover/delete', params }, { isTransformResponse: false });
   }
 }

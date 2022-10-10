@@ -2,8 +2,8 @@
  * @Author: nxy
  * @Date: 2022-10-08 17:52:00
  */
-import { getCurrentThemeInfo } from '/@/api/sys/theme';
-import { getBackendDeployUrl } from '/@/api/sys/user';
+import { getCurrentThemeInfo } from '/@/api/system/theme';
+import { getBackendDeployUrl } from '/@/api/system/user';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
 

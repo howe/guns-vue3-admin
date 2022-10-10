@@ -1,14 +1,9 @@
-<!--
- * @Author
-  components: { orgList },: nxy
- * @Date: 2022-10-09 13:50:10
--->
 <template>
   <div class="guns-body">
     <a-row :gutter="16">
       <!-- 左侧组织机构列表 -->
       <a-col :lg="5" :md="10" :sm="24" :xs="24" class="left-menu-height">
-        <org-list
+        <OrgList
           :orgList="orgLists"
           v-model:currentSelectOrgId="where.orgId"
           @changeNodeSelect="reload"
@@ -120,7 +115,7 @@
                       <a class="guns-text-danger">删除</a>
                     </a-popconfirm>
                     <a-divider type="vertical" />
-                    <a>分配角色</a>
+                    <a @click="openRoleDialog(record)">分配角色</a>
                     <a-divider type="vertical" />
                     <a @click="resetPsw(record)">重置密码</a>
                   </a-space>
@@ -131,6 +126,17 @@
         </div>
       </a-col>
     </a-row>
+
+    <!-- 编辑弹窗 -->
+    <user-edit
+      v-model:visible="showEdit"
+      :data="current"
+      @done="reload"
+      :org-list="orgLists"
+      :defaultKey="defaultKey"
+      v-if="showEdit"
+      ref="userEdit"
+    />
   </div>
 </template>
 
@@ -138,7 +144,8 @@
   import { BasicTable } from '/@/components/Table';
   import { onMounted, reactive, ref, createVNode } from 'vue';
   import OrgList from './components/org-list.vue';
-  import { UserApi } from '/@/api/sys/user/UserApi';
+  import UserEdit from './components/user-edit.vue';
+  import { UserApi } from '/@/api/system/user/UserApi';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { message, Modal } from 'ant-design-vue';
 
@@ -213,6 +220,13 @@
 
   // 是否显示弹框
   const showEdit = ref<boolean>(false);
+
+  // 当前行的数据
+  const current = ref<any>(null);
+
+  // 默认选中tab
+  const defaultKey = ref<string>('1');
+
   onMounted(async () => {
     orgLists.value = await UserApi.getOrgTeeList();
   });
@@ -225,7 +239,6 @@
 
   // 重置
   const reset = () => {
-    where.orgId = '';
     where.account = '';
     where.realName = '';
     reload();
@@ -241,8 +254,9 @@
     orgLists.value = await UserApi.getOrgTeeList();
   };
 
+  // 打开公司部门抽屉时，关闭表格的抽屉
   const closeCompanyEdit = () => {
-    console.log(1111);
+    showEdit.value = false;
   };
 
   /**
@@ -274,7 +288,10 @@
 
   // 打开新增编辑弹框
   const openEdit = (row: any) => {
-    console.log(row);
+    orgListRef.value.showEdit = false;
+    defaultKey.value = '1';
+    current.value = row;
+    showEdit.value = true;
   };
 
   /**
@@ -337,6 +354,14 @@
     const result = await UserApi.deleteUser({ userId: row.userId });
     message.success(result.message);
     reload();
+  };
+
+  // 分配角色点击
+  const openRoleDialog = (row: any) => {
+    orgListRef.value.showEdit = false;
+    defaultKey.value = '2';
+    current.value = row;
+    showEdit.value = true;
   };
 </script>
 

@@ -1,4 +1,8 @@
-import { UploadApiResult } from '/@/api/sys/model/uploadModel';
+/*
+ * @Author: nxy
+ * @Date: 2022-10-09 09:56:08
+ */
+import { UploadApiResult } from '/@/api/system/model/uploadModel';
 
 export enum UploadResultStatus {
   SUCCESS = 'success',
