@@ -25,6 +25,14 @@ const system: AppRouteModule = {
         title: t('用户管理'),
       },
     },
+    {
+      path: 'organization',
+      name: 'Organization',
+      component: () => import('/@/views/system/organization/index.vue'),
+      meta: {
+        title: t('机构管理'),
+      },
+    },
   ],
 }
 

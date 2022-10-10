@@ -46,7 +46,7 @@
     ColumnChangeParam,
   } from './types/table';
 
-  import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect } from 'vue';
+  import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect, watch } from 'vue';
   import { Table } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapperFixedHeightKey } from '/@/components/Page';
@@ -284,6 +284,13 @@
       function setProps(props: Partial<BasicTableProps>) {
         innerPropsRef.value = { ...unref(innerPropsRef), ...props };
       }
+
+      // 默认展开所有
+      watch(() => tableData.value, val => {
+        if (props.defaultExpandAllRows && props.isTreeTable) {
+          expandAll();
+        }
+      })
 
       const tableAction: TableActionType = {
         reload,

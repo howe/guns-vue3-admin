@@ -151,5 +151,10 @@ export const basicProps = {
   where: {
     type: Object,
     default: {}
+  },
+  // 默认展开所有
+  defaultExpandAllRows: {
+    type: Boolean,
+    default: false,
   }
 };

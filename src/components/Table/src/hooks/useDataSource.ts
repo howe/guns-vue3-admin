@@ -307,7 +307,7 @@ export function useDataSource(
           return await fetch(opt);
         }
       }
-
+      
       if (afterFetch && isFunction(afterFetch)) {
         resultItems = (await afterFetch(resultItems)) || resultItems;
       }
