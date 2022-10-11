@@ -1,13 +1,13 @@
 <template>
   <div :class="prefixCls" :style="{ width: containerWidth }">
-    <ImgUpload
+    <!-- <ImgUpload
       :fullscreen="fullscreen"
       @uploading="handleImageUploading"
       @done="handleDone"
       v-if="showImageUpload"
       v-show="editorRef"
       :disabled="disabled"
-    />
+    /> -->
     <textarea
       :id="tinymceId"
       ref="elRef"
@@ -114,7 +114,7 @@
     components: { ImgUpload },
     inheritAttrs: false,
     props: tinymceProps,
-    emits: ['change', 'update:modelValue', 'inited', 'init-error'],
+    emits: ['change', 'update:modelValue', 'inited', 'init-error', 'update:value'],
     setup(props, { emit, attrs }) {
       const editorRef = ref<Nullable<Editor>>(null);
       const fullscreen = ref(false);
@@ -239,7 +239,6 @@
           return;
         }
         const value = props.modelValue || '';
-
         editor.setContent(value);
         bindModelHandlers(editor);
         bindHandlers(e, attrs, unref(editorRef));
@@ -280,6 +279,7 @@
         editor.on(normalizedEvents ? normalizedEvents : 'change keyup undo redo', () => {
           const content = editor.getContent({ format: attrs.outputFormat });
           emit('update:modelValue', content);
+          emit('update:value', content);
           emit('change', content);
         });
 
