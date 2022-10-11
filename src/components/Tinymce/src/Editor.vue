@@ -1,13 +1,13 @@
 <template>
   <div :class="prefixCls" :style="{ width: containerWidth }">
-    <!-- <ImgUpload
+    <ImgUpload
       :fullscreen="fullscreen"
       @uploading="handleImageUploading"
       @done="handleDone"
       v-if="showImageUpload"
       v-show="editorRef"
       :disabled="disabled"
-    /> -->
+    />
     <textarea
       :id="tinymceId"
       ref="elRef"
