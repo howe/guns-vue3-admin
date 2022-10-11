@@ -17,7 +17,6 @@ import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
-
 import { getMenuList } from '/@/api/system/menu';
 import { getPermCode } from '/@/api/system/user';
 
@@ -39,6 +38,8 @@ interface PermissionState {
   backMenuList: Menu[];
   // 菜单列表
   frontMenuList: Menu[];
+  // 当前激活的tab应用数据
+  newActiveTabData: any;
 }
 
 export const usePermissionStore = defineStore({
@@ -58,6 +59,8 @@ export const usePermissionStore = defineStore({
     // menu List
     // 菜单列表
     frontMenuList: [],
+    // 当前激活的tab应用
+    newActiveTabData: {},
   }),
   getters: {
     getPermCodeList(): string[] | number[] {
@@ -97,6 +100,12 @@ export const usePermissionStore = defineStore({
     setDynamicAddedRoute(added: boolean) {
       this.isDynamicAddedRoute = added;
     },
+    
+    // 当前激活tab的数据
+    setNewActiveTabData(data: any) {
+      this.newActiveTabData = data;
+    },
+
     resetState(): void {
       this.isDynamicAddedRoute = false;
       this.permCodeList = [];
@@ -221,8 +230,13 @@ export const usePermissionStore = defineStore({
           // 这个功能可能只需要执行一次，实际项目可以自己放在合适的时间
           let routeList: AppRouteRecordRaw[] = [];
           try {
-            await this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
+
+            // await this.changePermissionCode();
+            if (userStore.allMenuList && userStore.allMenuList.length > 0) {
+              this.setNewActiveTabData(userStore.allMenuList[0]);
+              routeList = userStore.allMenuList[0]?.children;
+            }
+            // routeList = (await getMenuList()) as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }

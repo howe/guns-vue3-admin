@@ -16,6 +16,7 @@ import { useSystemStore } from '/@/store/modules/system';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
+import { setMenu } from '/@/utils/common/util';
 import { h } from 'vue';
 
 interface UserState {
@@ -24,6 +25,7 @@ interface UserState {
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+  allMenuList: any;
 }
 
 export const useUserStore = defineStore({
@@ -39,6 +41,8 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    // 所有的菜单集合
+    allMenuList: [],
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -73,6 +77,9 @@ export const useUserStore = defineStore({
     },
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
+    },
+    setAllMenuList(list: string[]) {
+      this.allMenuList = setMenu(list);
     },
     resetState() {
       this.userInfo = null;
@@ -127,6 +134,13 @@ export const useUserStore = defineStore({
       const systemStore = useSystemStore();
       if (!this.getToken) return null;
       const userInfo = await getUserInfo({ menuFrontType: systemStore.antdvFrontType });
+      // 存所有菜单
+      if (userInfo?.authorities) {
+        this.setAllMenuList(userInfo.authorities);
+        if (userInfo?.authorities[0]?.children[0]?.children[0]?.path) {
+          userInfo.homePath = userInfo?.authorities[0]?.children[0]?.children[0]?.path;
+        }
+      }
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];

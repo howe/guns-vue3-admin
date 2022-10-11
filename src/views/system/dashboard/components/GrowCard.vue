@@ -1,3 +1,7 @@
+<!--
+ * @Author: nxy
+ * @Date: 2022-10-11 14:38:24
+-->
 <template>
   <div class="md:flex">
     <template v-for="(item, index) in growCardList" :key="item.title">
