@@ -74,7 +74,7 @@
           <a-row :gutter="16">
             <a-col :lg="8" :md="12" :sm="12" :xs="12">
               <a-card hoverable :body-style="{ padding: 0 }">
-                <a-card hoverable :body-style="{ padding: 0 }" class="statistic card-bg1">
+                <a-card hoverable :body-style="{ padding: 0 }" class="statistic card-bg1" style="margin-bottom: 0;">
                   <div>
                     <ApartmentOutlined class="app-link-icon" />&nbsp;&nbsp;&nbsp;<span
                       >部门总数：{{ orgInfo.currentDeptNum }}</span
@@ -85,7 +85,7 @@
             </a-col>
             <a-col :lg="8" :md="12" :sm="12" :xs="12">
               <a-card hoverable :body-style="{ padding: 0 }">
-                <a-card hoverable :body-style="{ padding: 0 }" class="statistic card-bg2">
+                <a-card hoverable :body-style="{ padding: 0 }" class="statistic card-bg2" style="margin-bottom: 0;">
                   <div>
                     <TeamOutlined class="app-link-icon" />&nbsp;&nbsp;&nbsp;<span
                       >人员总数：{{ orgInfo.currentCompanyPersonNum }}</span
