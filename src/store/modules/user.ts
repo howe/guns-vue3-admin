@@ -151,8 +151,9 @@ export const useUserStore = defineStore({
       }
       this.setUserInfo(userInfo);
       // 刷新时，更换路由
-      if (flag == '1') {
+      if (flag == '1' && localStorage.getItem('isChange')) {
         await router.replace(userInfo?.homePath);
+        localStorage.removeItem('isChange');
       }
       return userInfo;
     },

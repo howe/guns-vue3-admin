@@ -8,7 +8,6 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { RootRoute } from '/@/router/routes';
-import { router } from '/@/router';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 

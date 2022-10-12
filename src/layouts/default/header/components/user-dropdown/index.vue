@@ -114,12 +114,13 @@
             break;
           case 'backend':
             systemStore.setMenuFrontType(2);
+            localStorage.setItem('isChange', true);
             // 从新加载系统界面，跳转到首页
             window.location.reload();
-            redo();
             break;
           case 'frontend':
             systemStore.setMenuFrontType(1);
+            localStorage.setItem('isChange', true);
             // 从新加载系统界面，跳转到首页
             window.location.reload();
             break;
