@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-08 17:52:00
- */
 import { getCurrentThemeInfo } from '/@/api/system/theme';
 import { getBackendDeployUrl } from '/@/api/system/user';
 import { defineStore } from 'pinia';
@@ -16,7 +12,7 @@ interface SystemState {
   gunsMgrFavicon: any;
   gunsMgrFooterText: any;
   gunsMgrLoginBackgroundImg: any;
-  antdvFrontType: number;
+  antdvFrontType: any;
   baseUrl: string;
 }
 export const useSystemStore = defineStore({
@@ -39,7 +35,7 @@ export const useSystemStore = defineStore({
     // 登录页面背景图片
     gunsMgrLoginBackgroundImg: null,
     // 当前查询的是前台还是后台菜单，默认是前台，1-前台，2-后台
-    antdvFrontType: 1,
+    antdvFrontType: localStorage.getItem('antdvFrontType') ? Number(localStorage.getItem('antdvFrontType')) : 1,
     //api基础路径
     baseUrl: '',
   }),
@@ -87,7 +83,8 @@ export const useSystemStore = defineStore({
      * @author fengshuonan
      * @date 2022/3/4 10:37
      */
-    setMenuFrontType(antdvFrontType: number) {
+    setMenuFrontType(antdvFrontType: any) {
+      localStorage.setItem('antdvFrontType', antdvFrontType);
       this.antdvFrontType = antdvFrontType;
     },
 

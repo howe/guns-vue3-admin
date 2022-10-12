@@ -48,4 +48,6 @@ export interface GetUserInfoModel {
   desc?: string;
   // 菜单列表
   authorities?: any;
+  // 首页路径名称
+  homePath?: any;
 }

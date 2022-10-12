@@ -111,7 +111,7 @@ export const useUserStore = defineStore({
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null;
       // get user info
-      const userInfo = await this.getUserInfoAction();
+      const userInfo = await this.getUserInfoAction('2');
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
@@ -130,7 +130,7 @@ export const useUserStore = defineStore({
       }
       return userInfo;
     },
-    async getUserInfoAction(): Promise<UserInfo | null> {
+    async getUserInfoAction(flag: string): Promise<UserInfo | null> {
       const systemStore = useSystemStore();
       if (!this.getToken) return null;
       const userInfo = await getUserInfo({ menuFrontType: systemStore.antdvFrontType });
@@ -150,6 +150,10 @@ export const useUserStore = defineStore({
         this.setRoleList([]);
       }
       this.setUserInfo(userInfo);
+      // 刷新时，更换路由
+      if (flag == '1') {
+        await router.replace(userInfo?.homePath);
+      }
       return userInfo;
     },
     /**

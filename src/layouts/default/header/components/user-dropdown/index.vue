@@ -12,12 +12,18 @@
     <template #overlay>
       <Menu @click="handleMenuClick">
         <MenuItem
-          key="doc"
-          :text="t('layout.header.dropdownItemDoc')"
-          icon="ion:document-text-outline"
-          v-if="getShowDoc"
+          key="backend"
+          :text="t('后台管理')"
+          v-if="antdvFrontType === 1"
+          icon="ion:settings-outline"
         />
-        <MenuDivider v-if="getShowDoc" />
+        <MenuItem
+          key="frontend"
+          :text="t('前台管理')"
+          v-if="antdvFrontType === 2"
+          icon="ant-design:appstore-add-outlined"
+        />
+        <MenuDivider />
         <MenuItem
           v-if="getUseLockPage"
           key="lock"
@@ -54,6 +60,7 @@
   import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import { useSystemStore } from '/@/store/modules/system';
 
   type MenuEvent = 'logout' | 'doc' | 'lock';
 
@@ -74,6 +81,12 @@
       const { t } = useI18n();
       const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
+      const systemStore = useSystemStore();
+
+      // 判断是前台还是后台
+      const antdvFrontType = computed(() => {
+        return systemStore.antdvFrontType;
+      })
 
       const getUserInfo = computed(() => {
         const { realName = '', avatar, desc } = userStore.getUserInfo || {};
@@ -91,21 +104,24 @@
         userStore.confirmLoginOut();
       }
 
-      // open doc
-      function openDoc() {
-        openWindow(DOC_URL);
-      }
-
       function handleMenuClick(e: MenuInfo) {
         switch (e.key as MenuEvent) {
           case 'logout':
             handleLoginOut();
             break;
-          case 'doc':
-            openDoc();
-            break;
           case 'lock':
             handleLock();
+            break;
+          case 'backend':
+            systemStore.setMenuFrontType(2);
+            // 从新加载系统界面，跳转到首页
+            window.location.reload();
+            redo();
+            break;
+          case 'frontend':
+            systemStore.setMenuFrontType(1);
+            // 从新加载系统界面，跳转到首页
+            window.location.reload();
             break;
         }
       }
@@ -114,6 +130,7 @@
         prefixCls,
         t,
         getUserInfo,
+        antdvFrontType,
         handleMenuClick,
         getShowDoc,
         register,
