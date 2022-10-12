@@ -88,7 +88,7 @@
                 <a @click="openEdit(record)">修改</a>
                 <a-divider type="vertical" />
                 <a-popconfirm title="确定要删除此机构吗？" @confirm="remove(record)">
-                  <a class="ele-text-danger">删除</a>
+                  <a class="guns-text-danger">删除</a>
                 </a-popconfirm>
               </a-space>
             </template>

@@ -69,7 +69,7 @@
               <a-space>
                 <a @click="openEdit(record)">查看</a>
                 <a-divider type="vertical" />
-                <a class="ele-text-danger" @click="deleteMessage(record)">删除</a>
+                <a class="guns-text-danger" @click="deleteMessage(record)">删除</a>
               </a-space>
             </template>
           </template>
