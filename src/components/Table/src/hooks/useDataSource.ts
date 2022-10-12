@@ -284,6 +284,12 @@ export function useDataSource(
         opt?.filterInfo ?? {},
         where,
       );
+
+      if (params?.page) {
+        params.pageNo = params.page;
+        delete params.page;
+      }
+      
       if (beforeFetch && isFunction(beforeFetch)) {
         params = (await beforeFetch(params)) || params;
       }

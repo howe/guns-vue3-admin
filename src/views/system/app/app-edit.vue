@@ -4,11 +4,11 @@
     <common-drawer
       :width="800"
       :visible="visible"
-      title="修改职位"
+      title="修改应用"
       @close="updateVisible(false)"
       v-if="isUpdate"
     >
-      <position-form v-model:form="state.form" ref="formRef"></position-form>
+      <app-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></app-form>
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
@@ -17,18 +17,18 @@
     <!-- 新增 -->
     <a-modal
       :width="800"
+      :maskClosable="false"
       :visible="visible"
       :confirm-loading="loading"
       :forceRender="true"
-      :maskClosable="false"
-      title="新建职位"
+      title="新建应用"
       :body-style="{ paddingBottom: '8px' }"
       @update:visible="updateVisible"
       @ok="save"
       v-else
       @close="updateVisible(false)"
     >
-      <position-form v-model:form="state.form" ref="formRef"></position-form>
+      <app-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></app-form>
     </a-modal>
   </div>
 </template>
@@ -36,9 +36,9 @@
 <script lang="ts" setup>
   import CommonDrawer from '/@/components/CommonDrawer/index.vue';
   import { message } from 'ant-design-vue';
-  import PositionForm from './position-form.vue';
-  import { PositionApi } from '/@/api/system/position/PositionApi';
-  import { reactive, ref, watch } from 'vue';
+  import { SysAppApi } from '/@/api/system/app/SysAppApi';
+  import AppForm from './app-form.vue';
+  import { onMounted, reactive, ref, watch } from 'vue';
 
   const props = defineProps<{
     // 弹窗是否打开
@@ -75,11 +75,36 @@
     emits('update:visible', value);
   };
 
+  // 初始化
+  const init = () => {
+    if (props.data) {
+      state.form = Object.assign({}, props.data);
+      isUpdate.value = true;
+    } else {
+      state.form = {};
+      isUpdate.value = false;
+    }
+    if (formRef.value && formRef.value.$refs.formRef) {
+      formRef.value.$refs.formRef.clearValidate();
+    }
+  };
+
+  onMounted(() => {
+    init();
+  });
+
+  watch(
+    () => props.data,
+    (val) => {
+      init();
+    },
+  );
+
   /**
-   * 保存和编辑职务
+   * 保存和编辑
    *
-   * @author fengshuonan
-   * @date 2021/4/8 13:33
+   * @author chenjinlong
+   * @date 2021/4/7 11:00
    */
   const save = () => {
     // 校验表单
@@ -90,11 +115,11 @@
 
         let result = null;
 
-        // 执行编辑或修改
+        // 执行编辑或修改方法
         if (isUpdate.value) {
-          result = PositionApi.edit(state.form);
+          result = SysAppApi.edit(state.form);
         } else {
-          result = PositionApi.add(state.form);
+          result = SysAppApi.add(state.form);
         }
         result
           .then((result) => {
@@ -118,34 +143,6 @@
       }
     });
   };
-
-  watch(
-    () => props.data,
-    (val) => {
-      if (val) {
-        state.form = Object.assign({}, val);
-        isUpdate.value = true;
-      } else {
-        state.form = {};
-        isUpdate.value = false;
-      }
-      if (formRef.value.$refs.formRef) {
-        formRef.value.$refs.formRef.clearValidate();
-      }
-    },
-  );
-
-  watch(
-    () => props.visible,
-    (val) => {
-      if (!val) {
-        state.form = {};
-        if (formRef.value.$refs.formRef) {
-          formRef.value.$refs.formRef.clearValidate();
-        }
-      }
-    },
-  );
 </script>
 
 <style></style>
