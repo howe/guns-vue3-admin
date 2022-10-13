@@ -38,7 +38,7 @@ export function useCustomRow(
       onClick: (e: Event) => {
         e?.stopPropagation();
         function handleClick() {
-          const { rowSelection, rowKey, clickToRowSelect } = unref(propsRef);
+          const { rowSelection, rowKey, clickToRowSelect, isClearRadio } = unref(propsRef);
           if (!rowSelection || !clickToRowSelect) return;
           const keys = getSelectRowKeys();
           const key = getKey(record, rowKey, unref(getAutoCreateKey));
@@ -73,7 +73,10 @@ export function useCustomRow(
               setSelectedRowKeys([key]);
               return;
             }
-            clearSelectedRowKeys();
+            // 是否清空当前选中
+            if (isClearRadio) {
+              clearSelectedRowKeys();
+            }
           }
         }
         handleClick();

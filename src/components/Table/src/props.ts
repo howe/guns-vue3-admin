@@ -156,5 +156,10 @@ export const basicProps = {
   defaultExpandAllRows: {
     type: Boolean,
     default: false,
+  },
+  // 为单选时，再次点击时，是否清空当前数据
+  isClearRadio: {
+    type: Boolean,
+    default: false,
   }
 };

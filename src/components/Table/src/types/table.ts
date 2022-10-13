@@ -140,6 +140,7 @@ export interface BasicTableProps<T = any> {
   clickToRowSelect?: boolean;
   isTreeTable?: boolean;
   where?: Object;
+  isClearRadio: Boolean,
   // 自定义排序方法
   sortFn?: (sortInfo: SorterResult) => any;
   // 排序方法
