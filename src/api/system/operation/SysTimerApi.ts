@@ -1,4 +1,4 @@
-import Request from '@/utils/request-util';
+import { defHttp } from '/@/utils/http/axios';
 
 /**
  * 应用api
@@ -14,7 +14,7 @@ export class SysTimerApi {
    * @date 2021/4/12 22:25
    */
   static findTimerPage(params) {
-    return Request.getAndLoadData('/sysTimers/page', params);
+    return defHttp.get({ url: '/sysTimers/page', params });
   }
 
   /**
@@ -24,7 +24,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static add(params) {
-    return Request.post('/sysTimers/add', params);
+    return defHttp.post({ url: '/sysTimers/add', params }, { isTransformResponse: false });
   }
 
   /**
@@ -34,7 +34,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static detail(params) {
-    return Request.post('/sysTimers/detail', params);
+    return defHttp.post({ url: '/sysTimers/detail', params }, { isTransformResponse: false });
   }
 
   /**
@@ -44,7 +44,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static edit(params) {
-    return Request.post('/sysTimers/edit', params);
+    return defHttp.post({ url: '/sysTimers/edit', params }, { isTransformResponse: false });
   }
 
   /**
@@ -54,7 +54,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static stop(params) {
-    return Request.post('/sysTimers/stop', params);
+    return defHttp.post({ url: '/sysTimers/stop', params }, { isTransformResponse: false });
   }
 
   /**
@@ -64,7 +64,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static start(params) {
-    return Request.post('/sysTimers/start', params);
+    return defHttp.post({ url: '/sysTimers/start', params }, { isTransformResponse: false });
   }
 
   /**
@@ -74,7 +74,7 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static delete(params) {
-    return Request.post('/sysTimers/delete', params);
+    return defHttp.post({ url: '/sysTimers/delete', params }, { isTransformResponse: false });
   }
 
   /**
@@ -84,6 +84,6 @@ export class SysTimerApi {
    * @date 2021/4/13 09:52
    */
   static getActionClasses() {
-    return Request.postAndLoadData('/sysTimers/getActionClasses');
+    return defHttp.post({ url: '/sysTimers/getActionClasses' }, { isTransformResponse: false });
   }
 }

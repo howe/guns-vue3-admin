@@ -6,6 +6,9 @@ import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
 import { VAxios } from './Axios';
+import { unref } from 'vue';
+import { Modal } from 'ant-design-vue';
+import { router } from '/@/router';
 import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -13,6 +16,7 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
+import { logout } from '/@/utils/common/util';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
@@ -199,6 +203,26 @@ const transform: AxiosTransform = {
       isOpenRetry &&
       // @ts-ignore
       retryRequest.retry(axiosInstance, error);
+
+    // 如果是非B0301，则提示错误信息
+    if (error?.response?.data?.code == 'B0301') {
+      // 如果是B0301，则跳转登录界面
+      const currentPath = unref(router.currentRoute).path;
+      if (currentPath === '/') {
+        logout(true, null);
+      } else {
+        Modal.destroyAll();
+        Modal.info({
+          title: '系统提示',
+          content: '登录状态已过期, 请退出重新登录!',
+          okText: '重新登录',
+          onOk: () => {
+            logout(false, currentPath);
+          },
+        });
+      }
+    }
+
     return Promise.reject(error);
   },
 };
@@ -247,7 +271,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           withToken: true,
           retryRequest: {
             isOpenRetry: true,
-            count: 5,
+            count: 0,
             waitTime: 100,
           },
         },

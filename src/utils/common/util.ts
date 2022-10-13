@@ -1,3 +1,6 @@
+import { router } from '/@/router';
+import { useUserStoreWithOut } from '/@/store/modules/user';
+
 /**
  * @author: nxy
  * @Date: 2022-10-10 14:18:30
@@ -63,7 +66,7 @@ export function eachTreeData(data: any, callback: any, childKey = 'children') {
  * @author fengshuonan
  * @date 2022/5/20 18:33
  */
- export function deleteEmptyChild(nodes: any) {
+export function deleteEmptyChild(nodes: any) {
   for (let thisNode of nodes) {
     if (!thisNode) {
       continue;
@@ -75,4 +78,22 @@ export function eachTreeData(data: any, callback: any, childKey = 'children') {
     }
   }
   return nodes;
+}
+
+/**
+ * 退出登录
+ * @param route 是否使用路由跳转
+ * @param from 登录后跳转的地址
+ */
+export function logout(route: boolean, from: any) {
+  const userStore = useUserStoreWithOut();
+  userStore.setToken(undefined);
+  if (route) {
+    router.push({
+      path: '/login',
+    });
+  } else {
+    // 这样跳转避免再次登录重复注册动态路由
+    location.replace('/login' + (from ? '?redirect=' + from : ''));
+  }
 }

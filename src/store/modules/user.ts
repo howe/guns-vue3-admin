@@ -130,6 +130,7 @@ export const useUserStore = defineStore({
       }
       return userInfo;
     },
+    // 获取用户信息
     async getUserInfoAction(flag: string): Promise<UserInfo | null> {
       const systemStore = useSystemStore();
       if (!this.getToken) return null;
