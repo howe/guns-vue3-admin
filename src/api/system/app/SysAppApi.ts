@@ -1,3 +1,5 @@
+import { PageResult } from '/@/api/model/baseModel';
+import { SysApp, SysAppRequest } from './model/SysAppModel';
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -13,8 +15,8 @@ export class SysAppApi {
    * @author fengshuonan
    * @date 2022/5/8 20:36
    */
-  static findPage(params) {
-    return defHttp.get({ url: '/sysApp/page', params });
+  static findPage(params: SysAppRequest) {
+    return defHttp.get<PageResult<SysApp>>({ url: '/sysApp/page', params });
   }
 
   /**
@@ -23,7 +25,7 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static add(params) {
+  static add(params: SysAppRequest) {
     return defHttp.post({ url: '/sysApp/add', params }, { isTransformResponse: false });
   }
 
@@ -33,7 +35,7 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static del(params) {
+  static del(params: SysAppRequest) {
     return defHttp.post({ url: '/sysApp/delete', params }, { isTransformResponse: false });
   }
 
@@ -43,7 +45,7 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static batchDel(params) {
+  static batchDel(params: SysAppRequest) {
     return defHttp.post({ url: '/sysApp/batchDelete', params }, { isTransformResponse: false });
   }
 
@@ -53,7 +55,7 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static edit(params) {
+  static edit(params: SysAppRequest) {
     return defHttp.post({ url: '/sysApp/edit', params }, { isTransformResponse: false });
   }
 
@@ -63,8 +65,11 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static active(params) {
-    return defHttp.post({ url: '/sysApp/updateActiveFlag', params }, { isTransformResponse: false });
+  static active(params: SysAppRequest) {
+    return defHttp.post(
+      { url: '/sysApp/updateActiveFlag', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -74,7 +79,7 @@ export class SysAppApi {
    * @date 2021/4/21 16:20
    */
   static getAppList() {
-    return defHttp.get({ url: '/sysMenu/getTopAppList' });
+    return defHttp.get<SysApp[]>({ url: '/sysMenu/getTopAppList' });
   }
 
   /**
@@ -83,7 +88,7 @@ export class SysAppApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static updateStatus(params) {
+  static updateStatus(params: SysAppRequest) {
     return defHttp.post({ url: '/sysApp/updateStatus', params }, { isTransformResponse: false });
   }
 }

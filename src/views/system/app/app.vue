@@ -75,7 +75,7 @@
 
             <!-- 图标渲染 -->
             <template v-else-if="column.key === 'icon'">
-              <component style="fontsize: 20px" :is="$antIcons[record.appIcon]" />
+              <component style="fontsize: 20px" :is="record.appIcon" />
             </template>
 
             <!-- table操作栏按钮 -->
@@ -94,16 +94,17 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <sys-app-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit"/>
+    <sys-app-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
-  import { BasicTable } from '/@/components/Table';
+  import { reactive, ref, unref } from 'vue';
+  import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
   import SysAppEdit from './app-edit.vue';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
+  import { SysApp } from '/@/api/system/app/model/SysAppModel';
 
   // 查询条件
   const where = reactive({
@@ -121,7 +122,7 @@
   const showEdit = ref<boolean>(false);
 
   // 表格配置
-  const columns = ref<string[]>([
+  const columns = ref<BasicColumn[]>([
     {
       title: '应用名称',
       dataIndex: 'appName',
@@ -150,8 +151,16 @@
     },
   ]);
 
-  // ref
-  const tableRef = ref(null);
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
+  // 获取表格action
+  const getTableAction = () => {
+    const tableAction = unref(tableRef);
+    if (!tableAction) {
+      throw new Error('tableAction is null');
+    }
+    return tableAction;
+  };
 
   /**
    * 点击查询
@@ -160,7 +169,9 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    tableRef.value.reload({ page: 1 });
+    getTableAction().reload({
+      page: 1,
+    });
   };
 
   /**
@@ -187,13 +198,13 @@
   };
 
   /**
-   * 打开编辑弹窗
+   * 打开新建/编辑弹窗
    *
-   * @author chenjinlong
-   * @date 2021/4/2 17:03
+   * @author yxx
+   * @date 2022/04/04 12:24
    */
-  const openEdit = (row) => {
-    current.value = row;
+  const openEdit = (row?: SysApp) => {
+    current.value = row ?? null;
     showEdit.value = true;
   };
 
