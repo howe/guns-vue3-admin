@@ -2,11 +2,11 @@
   <div>
     <a-form layout="inline" :model="where">
       <a-row>
-        <a-form-item label="配置名称">
-          <a-input v-model:value.trim="where.configName" placeholder="请输入名称" allow-clear />
+        <a-form-item label="名称">
+          <a-input v-model:value.trim="where.dictName" placeholder="请输入名称" allow-clear />
         </a-form-item>
-        <a-form-item label="配置编码">
-          <a-input v-model:value.trim="where.configCode" placeholder="请输入编码" allow-clear />
+        <a-form-item label="编码">
+          <a-input v-model:value.trim="where.dictCode" placeholder="请输入编码" allow-clear />
         </a-form-item>
         <a-form-item class="ele-text-center">
           <a-space>
@@ -21,11 +21,11 @@
       <BasicTable
         :canResize="false"
         ref="tableRef"
-        :api="SysConfigApi.findConfigPage"
+        :api="SysDictDataApi.findDictPage"
         :where="where"
         :columns="columns"
         showTableSetting
-        rowKey="configId"
+        rowKey="dictId"
         :rowSelection="{
           type: 'checkbox',
           selectedRowKeys: checkedKeys,
@@ -46,21 +46,12 @@
         </template>
 
         <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex == 'configName'">
-            <a @click="openEdit(record)">{{ record.configName }}</a>
-          </template>
-
-          <template v-if="column.key === 'sysFlag'">
-            <a-tag color="blue" v-if="record.sysFlag === 'Y'">是</a-tag>
-            <a-tag color="default" v-else>否</a-tag>
-          </template>
-
-          <template v-if="column.dataIndex == 'configCode'">
-            <a @click="openEdit(record)">{{ record.configCode }}</a>
+          <template v-if="column.dataIndex == 'dictName'">
+            <a @click="openEdit(record)">{{ record.dictName }}</a>
           </template>
 
           <!-- table操作栏按钮 -->
-          <template v-else-if="column.key === 'action'">
+          <template v-if="column.key === 'action'">
             <a-space>
               <a @click="openEdit(record)">修改</a>
               <a-divider type="vertical" />
@@ -74,9 +65,9 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <sys-config-edit
+    <dict-data-edit
       v-model:visible="showEdit"
-      :group-code="groupCode"
+      :dict-type-code="dictTypeCode"
       :data="current"
       @done="reload"
       v-if="showEdit"
@@ -88,57 +79,41 @@
   import { reactive, ref, watch } from 'vue';
   import { BasicTable } from '/@/components/Table';
   import { message } from 'ant-design-vue';
-  import SysConfigEdit from './sysconfig-edit.vue';
-  import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
+  import DictDataEdit from './dict-data-edit.vue';
+  import { SysDictDataApi } from '/@/api/system/basedata/SysDictDataApi';
 
   const props = defineProps<{
     // 配置组编码
-    groupCode: String;
+    dictTypeCode: String;
   }>();
 
   // 查询条件
   const where = reactive({
-    configName: '',
-    configCode: '',
-    groupCode: props.groupCode,
+    dictName: '',
+    dictCode: '',
+    dictTypeCode: props.dictTypeCode,
   });
 
   // 表格配置
-  const columns = <string[]>[
+  const columns = ref<string[]>([
     {
-      title: '配置名称',
-      dataIndex: 'configName',
-      width: 200,
+      title: '名称',
+      dataIndex: 'dictName',
     },
     {
-      title: '配置编码',
-      dataIndex: 'configCode',
-      width: 230,
+      title: '编码',
+      dataIndex: 'dictCode',
     },
     {
-      title: '属性值',
-      dataIndex: 'configValue',
-      width: 360,
-      ellipsis: true,
-    },
-    {
-      title: '系统类型',
-      key: 'sysFlag',
-      dataIndex: 'sysFlag',
-      width: 100,
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      width: 100,
+      title: '排序',
+      dataIndex: 'dictSort',
     },
     {
       title: '操作',
       key: 'action',
-      width: 120,
       align: 'center',
     },
-  ];
+  ]);
 
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
@@ -168,8 +143,8 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.configName = '';
-    where.configCode = '';
+    where.dictName = '';
+    where.dictCode = '';
     reload();
   };
 
@@ -180,7 +155,7 @@
    * @date 2021/4/2 17:03
    */
   const remove = async (row: any) => {
-    const result = await SysConfigApi.deleteSysConfig({ configId: row.configId });
+    const result = await SysDictDataApi.del({ dictId: row.dictId });
     message.success(result.message);
     reload();
   };
@@ -194,19 +169,19 @@
   const openEdit = (row: any) => {
     current.value = row;
     showEdit.value = true;
-    if (row && row.sysFlag) {
-      current.value.sysFlagChecked = row.sysFlag === 'Y';
-    }
   };
 
-  watch(() => props.groupCode, val => {
-    where.groupCode = val;
-    reload();
-  })
+  watch(
+    () => props.dictTypeCode,
+    (val) => {
+      where.dictTypeCode = val;
+      reload();
+    },
+  );
 
   defineExpose({
     showEdit,
-  })
+  });
 </script>
 
 <style></style>
