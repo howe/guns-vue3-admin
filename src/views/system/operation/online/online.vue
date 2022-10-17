@@ -30,10 +30,6 @@
           :columns="columns"
           showTableSetting
           rowKey="resourceId"
-          :rowSelection="{
-            type: 'account',
-            selectedRowKeys: checkedKeys,
-          }"
         >
           <template #bodyCell="{ column, record }">
             <!-- table操作栏按钮 -->
@@ -94,9 +90,6 @@
     },
   ]);
 
-  // 多选选中列表
-  const checkedKeys = ref<Array<string | number>>([]);
-
   // ref
   const tableRef = ref(null);
 
@@ -106,7 +99,6 @@
    * @Date: 2022-10-12 09:38:18
    */
   const reload = () => {
-    checkedKeys.value = [];
     tableRef.value.reload({ page: 1 });
   };
 
