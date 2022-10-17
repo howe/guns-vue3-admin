@@ -7,7 +7,7 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
  * @param {*} value 验证邮箱是否正确
  */
 export function emailReg(value: string | number) {
-  let exp: any = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  const exp: any = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return exp.test(value);
 }
 
@@ -17,7 +17,7 @@ export function emailReg(value: string | number) {
  * @param {*} value 验证手机号是否正确
  */
 export function phoneReg(value: string | number) {
-  let exp: any = /^1\d{10}$/;
+  const exp: any = /^1\d{10}$/;
   return exp.test(value);
 }
 
@@ -67,7 +67,7 @@ export function eachTreeData(data: any, callback: any, childKey = 'children') {
  * @date 2022/5/20 18:33
  */
 export function deleteEmptyChild(nodes: any) {
-  for (let thisNode of nodes) {
+  for (const thisNode of nodes) {
     if (!thisNode) {
       continue;
     }

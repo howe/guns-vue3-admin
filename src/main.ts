@@ -70,7 +70,7 @@ async function bootstrap() {
   app.use(Antd);
 
   // 注册图标组件到全局
-  Object.keys(antIcons).forEach(key => {
+  Object.keys(antIcons).forEach((key) => {
     app.component(key, antIcons[key]);
   });
   app.config.globalProperties.$antIcons = antIcons;
