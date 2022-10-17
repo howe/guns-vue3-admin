@@ -242,8 +242,8 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.timerName = '';
-    where.jobStatus = '';
+    where.fileLocation = '';
+    where.fileOriginName = '';
     reload();
   };
 
