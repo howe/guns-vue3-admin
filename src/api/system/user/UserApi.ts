@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-09 14:43:44
- */
 import { defHttp } from '/@/utils/http/axios';
 
 export class UserApi {

@@ -100,6 +100,8 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { RsaEncry } from '/@/utils/common/util';
+  import { IS_NEED_RSA } from '/@/config/settings';
   //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
@@ -132,6 +134,11 @@
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
+    // 是否需要加密
+    if (IS_NEED_RSA) {
+      // rsa加密密码
+      data.password = RsaEncry(data.password);
+    }
     try {
       loading.value = true;
       const userInfo = await userStore.login({
