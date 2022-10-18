@@ -33,6 +33,11 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
+      <div :class="`${prefixCls}-action__item `" @click="jumpGuns">
+        <img src="../../../assets/images/guns.png" alt="" class="guns-img">
+        <span class="guns-title">Guns-DevOps</span>
+      </div>
+
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
@@ -170,7 +175,13 @@
         return unref(getSplit) ? MenuModeEnum.HORIZONTAL : null;
       });
 
+      // 跳转到guns
+      const jumpGuns = () => {
+        window.open('http://192.168.31.141:8080/guns-devops');
+      }
+
       return {
+        jumpGuns,
         prefixCls,
         getHeaderClass,
         getShowHeaderLogo,
@@ -197,5 +208,13 @@
   });
 </script>
 <style lang="less">
+.guns-img {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+.guns-title {
+  font-size: 14px
+}
   @import './index.less';
 </style>
