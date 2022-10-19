@@ -25,6 +25,11 @@
         />
         <MenuDivider />
         <MenuItem
+          key="password"
+          :text="t('修改密码')"
+          icon="ant-design:key-outlined"
+        />
+        <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
@@ -39,13 +44,16 @@
     </template>
   </Dropdown>
   <LockAction @register="register" />
+  
+  <!-- 修改密码弹窗 -->
+  <PasswordModal v-model:visible="passwordVisible"/>
 </template>
 <script lang="ts">
   // components
   import { Dropdown, Menu } from 'ant-design-vue';
   import type { MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
 
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent, computed, ref } from 'vue';
 
   import { DOC_URL } from '/@/settings/siteSetting';
 
@@ -61,6 +69,7 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useSystemStore } from '/@/store/modules/system';
+  import PasswordModal from './password-modal.vue';
 
   type MenuEvent = 'logout' | 'doc' | 'lock';
 
@@ -69,6 +78,7 @@
     components: {
       Dropdown,
       Menu,
+      PasswordModal,
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
       MenuDivider: Menu.Divider,
       LockAction: createAsyncComponent(() => import('../lock/LockModal.vue')),
@@ -87,6 +97,9 @@
       const antdvFrontType = computed(() => {
         return systemStore.antdvFrontType;
       })
+
+      // 是否显示修改密码弹窗
+      const passwordVisible = ref<boolean>(false);
 
       const getUserInfo = computed(() => {
         const { realName = '', avatar, desc } = userStore.getUserInfo || {};
@@ -124,12 +137,16 @@
             // 从新加载系统界面，跳转到首页
             window.location.reload();
             break;
+          case 'password':
+            passwordVisible.value = true;
+            break;
         }
       }
 
       return {
         prefixCls,
         t,
+        passwordVisible,
         getUserInfo,
         antdvFrontType,
         handleMenuClick,
