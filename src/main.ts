@@ -66,7 +66,6 @@ async function bootstrap() {
 
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
-  // app.use(Antd);
 
   // 注册图标组件到全局
   Object.keys(antIcons).forEach((key) => {
