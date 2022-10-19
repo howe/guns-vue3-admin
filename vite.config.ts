@@ -78,8 +78,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       //     drop_console: VITE_DROP_CONSOLE,
       //   },
       // },
-      // Turning off brotliSize display can slightly reduce packaging time
-      brotliSize: false,
+      // 设置为false可禁用报告压缩块大小 可以稍微提高构建速度
+      reportCompressedSize: false,
       chunkSizeWarningLimit: 2000,
     },
     define: {
