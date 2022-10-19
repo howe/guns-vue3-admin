@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-09 09:56:08
- */
 import 'virtual:windi-base.css';
 import 'virtual:windi-components.css';
 import '/@/design/index.less';
