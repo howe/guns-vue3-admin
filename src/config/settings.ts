@@ -1,5 +1,7 @@
 // 是否需要加密密码
 export const IS_NEED_RSA = true;
+// 刷新路由的路由地址
+export const REDIRECT_PATH = '/redirect';
 
 // 消息类型常量
 export const WEBSOCKET_MESSAGE_TYPE = {

@@ -4,10 +4,13 @@ import { usePermissionStoreWithOut } from '/@/store/modules/permission';
 
 import { PageEnum } from '/@/enums/pageEnum';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import { useSystemStoreWithOut } from '/@/store/modules/system';
 
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { RootRoute } from '/@/router/routes';
+
+import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -17,6 +20,7 @@ const whitePathList: PageEnum[] = [LOGIN_PATH];
 
 export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut();
+  const systemStore = useSystemStoreWithOut();
   const permissionStore = usePermissionStoreWithOut();
   router.beforeEach(async (to, from, next) => {
     if (
@@ -31,7 +35,7 @@ export function createPermissionGuard(router: Router) {
 
     const token = userStore.getToken;
 
-    // Whitelist can be directly entered
+    // 可以直接输入白名单
     if (whitePathList.includes(to.path as PageEnum)) {
       if (to.path === LOGIN_PATH && token) {
         const isSessionTimeout = userStore.getSessionTimeout;
@@ -47,15 +51,15 @@ export function createPermissionGuard(router: Router) {
       return;
     }
 
-    // token does not exist
+    // token 不存在
     if (!token) {
-      // You can access without permission. You need to set the routing meta.ignoreAuth to true
+      // 您可以不经许可访问。您需要设置路由元。ignoreAuth为true
       if (to.meta.ignoreAuth) {
         next();
         return;
       }
 
-      // redirect login page
+      // 重定向登录页面
       const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
         path: LOGIN_PATH,
         replace: true,
@@ -68,9 +72,36 @@ export function createPermissionGuard(router: Router) {
       }
       next(redirectData);
       return;
+    } else {
+      // 可以获取到token，代表用户已经登录了
+      // 校验系统是否初始化过，如果没有初始化过，则进入初始化界面初始化一些后台需要的参数
+      if (systemStore.alreadyInitConfig === null || !systemStore.alreadyInitConfig) {
+        // 获取是否系统初始化过配置
+        let alreadyInit = await SysConfigApi.getInitConfigFlag();
+
+        // 更新store中存储的标识
+        systemStore.updateInitFlag(alreadyInit);
+
+        // 如果没有初始化系统配置，并且当前跳转的界面不是init界面，则跳转到init界面
+        if (!alreadyInit && to.path !== '/init') {
+          // 重定向登录页面
+          const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
+            path: '/init',
+            replace: false,
+          };
+          if (to.path) {
+            redirectData.query = {
+              ...redirectData.query,
+              redirect: to.path,
+            };
+          }
+          next(redirectData);
+          return;
+        }
+      }
     }
 
-    // Jump to the 404 page after processing the login
+    // 处理登录后跳转到404页
     if (
       from.path === LOGIN_PATH &&
       to.name === PAGE_NOT_FOUND_ROUTE.name &&
@@ -80,7 +111,7 @@ export function createPermissionGuard(router: Router) {
       return;
     }
 
-    // get userinfo while last fetch time is empty
+    // 获取用户信息，而上次获取时间为空
     if (userStore.getLastUpdateTime === 0) {
       try {
         await userStore.getUserInfoAction('1');

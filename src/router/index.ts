@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-08 14:28:30
- */
 import type { RouteRecordRaw } from 'vue-router';
 import type { App } from 'vue';
 
