@@ -1,35 +1,31 @@
-<!--
- * @Author: Vben
- * @Description: logo component
--->
 <template>
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
-    <img src="../../../assets/svg/logo.svg" />
+    <img :src="logo" />
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
-      {{ title }}
+      {{ projectName }}
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  import { computed, unref } from 'vue';
-  import { useGlobSetting } from '/@/hooks/setting';
+  import { computed, unref, onMounted, ref } from 'vue';
   import { useGo } from '/@/hooks/web/usePage';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageEnum } from '/@/enums/pageEnum';
   import { useUserStore } from '/@/store/modules/user';
+  import { useSystemStore } from '/@/store/modules/system';
 
   const props = defineProps({
     /**
-     * The theme of the current parent component
+     * 主题
      */
     theme: { type: String, validator: (v: string) => ['light', 'dark'].includes(v) },
     /**
-     * Whether to show title
+     * 是否显示标题
      */
     showTitle: { type: Boolean, default: true },
     /**
-     * The title is also displayed when the menu is collapsed
+     * 总是显示标题
      */
     alwaysShowTitle: { type: Boolean },
   });
@@ -37,8 +33,12 @@
   const { prefixCls } = useDesign('app-logo');
   const { getCollapsedShowTitle } = useMenuSetting();
   const userStore = useUserStore();
-  const { title } = useGlobSetting();
+  const systemStore = useSystemStore();
   const go = useGo();
+  // logo
+  const logo = ref<string>('');
+  // 项目名称
+  const projectName = ref<string>('');
 
   const getAppLogoClass = computed(() => [
     prefixCls,
@@ -56,6 +56,13 @@
   function goHome() {
     go(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
   }
+
+  onMounted(async () => {
+    // 加载主题信息，logo和左上角的项目名
+    let result = await systemStore.loadThemeInfo();
+    logo.value = result.gunsMgrLogo;
+    projectName.value = result.gunsMgrName;
+  });
 </script>
 <style lang="less" scoped>
   @prefix-cls: ~'@{namespace}-app-logo';
