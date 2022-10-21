@@ -141,7 +141,12 @@
       </a-col>
     </a-row>
     <!-- 头像裁剪弹窗 -->
-    <!-- <ele-cropper-modal v-model:visible="showCropper" :src="loginUser.avatar" :to-blob="true" @done="onCrop" /> -->
+    <cropper-modal
+      v-model:visible="showCropper"
+      :src="loginUser.avatar"
+      :to-blob="true"
+      @done="onCrop"
+    />
   </div>
 </template>
 
@@ -150,6 +155,7 @@
   import { PersonInfoApi } from '/@/api/personInfo/PersonInfoApi';
   import { FileApi } from '/@/api/system/operation/FileApi';
   import { useUserStore } from '/@/store/modules/user';
+  import CropperModal from '/@/components/PictureCropper/index.vue';
   import { message } from 'ant-design-vue';
 
   // tab页选中
@@ -221,154 +227,155 @@
     // 调用更新头像的接口
     const formData = new FormData();
     formData.append('file', blob, 'avatar.jpg');
+    formData.append('secretFlag', 'Y');
 
     // 更新头像
-    const uploadResult = await FileApi.commonUpload('Y', formData);
+    const uploadResult = await FileApi.commonUpload(formData);
     const result = await PersonInfoApi.updateAvatar({ avatar: uploadResult.data.fileId });
     message.success(result.message);
   };
 </script>
 
 <style scoped lang="less">
-.ele-text-center {
+  .ele-text-center {
     text-align: center;
-}
-.ant-divider-horizontal {
+  }
+  .ant-divider-horizontal {
     margin: 0;
-}
-/* 单元格 */
-.ele-cell {
-  display: flex;
-  &:not(.ele-cell-align-top) {
-    align-items: center;
+  }
+  /* 单元格 */
+  .ele-cell {
+    display: flex;
+    &:not(.ele-cell-align-top) {
+      align-items: center;
+    }
+
+    &.ele-cell-align-bottom {
+      align-items: flex-end;
+    }
+
+    & > .ele-cell-content {
+      flex: 1;
+      box-sizing: border-box;
+    }
+
+    & > * + .ele-cell-content {
+      padding-left: 10px;
+    }
+
+    .ele-cell-title {
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 15px;
+    }
+
+    .ele-cell-desc {
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+  }
+  /* 用户资料卡片 */
+  .user-info-avatar-group {
+    margin: 16px 0;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
   }
 
-  &.ele-cell-align-bottom {
-    align-items: flex-end;
+  .user-info-avatar-group .user-info-avatar-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 30px;
+    display: none;
+    z-index: 2;
   }
 
-  & > .ele-cell-content {
-    flex: 1;
-    box-sizing: border-box;
+  .user-info-avatar-group:hover .user-info-avatar-icon {
+    display: block;
   }
 
-  & > * + .ele-cell-content {
-    padding-left: 10px;
+  .user-info-avatar-group:hover:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
   }
 
-  .ele-cell-title {
-    color: rgba(0, 0, 0, .85);
-    font-size: 15px;
+  .user-info-avatar-group + h1 {
+    margin-bottom: 8px;
   }
 
-  .ele-cell-desc {
-    color: rgba(0, 0, 0, .45);
-    font-size: 13px;
-    margin-top: 4px;
+  /* 用户信息列表 */
+  .user-info-list {
+    margin: 52px 0 32px 0;
   }
-}
-/* 用户资料卡片 */
-.user-info-avatar-group {
-  margin: 16px 0;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
 
-.user-info-avatar-group .user-info-avatar-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 30px;
-  display: none;
-  z-index: 2;
-}
+  .user-info-list .ele-cell + .ele-cell {
+    margin-top: 16px;
+  }
 
-.user-info-avatar-group:hover .user-info-avatar-icon {
-  display: block;
-}
+  .user-info-list + .ant-divider {
+    margin-bottom: 16px;
+  }
 
-.user-info-avatar-group:hover:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.3);
-}
+  /* 用户标签 */
+  .user-info-tags {
+    margin: 16px 0 4px 0;
+  }
 
-.user-info-avatar-group + h1 {
-  margin-bottom: 8px;
-}
+  .user-info-tags .ant-tag {
+    margin: 0 12px 8px 0;
+  }
 
-/* 用户信息列表 */
-.user-info-list {
-  margin: 52px 0 32px 0;
-}
+  /* 右侧卡片 */
+  .user-info-tabs :deep(.ant-card-body) {
+    padding: 0;
+  }
 
-.user-info-list .ele-cell + .ele-cell {
-  margin-top: 16px;
-}
+  .user-info-tabs :deep(.ant-tabs-tab) {
+    padding-left: 4px;
+    padding-right: 4px;
+    margin: 0 12px 0 28px !important;
+  }
 
-.user-info-list + .ant-divider {
-  margin-bottom: 16px;
-}
+  .user-info-tabs .ant-form {
+    max-width: 580px;
+    margin-top: 20px;
+    padding: 0 24px;
+  }
 
-/* 用户标签 */
-.user-info-tags {
-  margin: 16px 0 4px 0;
-}
+  /* 用户账号绑定列表 */
+  .user-account-list {
+    margin-bottom: 27px;
+  }
 
-.user-info-tags .ant-tag {
-  margin: 0 12px 8px 0;
-}
+  .user-account-list > .ele-cell {
+    padding: 18px 34px;
+  }
 
-/* 右侧卡片 */
-.user-info-tabs :deep(.ant-card-body) {
-  padding: 0;
-}
+  .user-account-list .user-account-icon {
+    color: #fff;
+    padding: 8px;
+    font-size: 26px;
+    border-radius: 50%;
+  }
 
-.user-info-tabs :deep(.ant-tabs-tab) {
-  padding-left: 4px;
-  padding-right: 4px;
-  margin: 0 12px 0 28px !important;
-}
+  .user-account-list .user-account-icon.anticon-qq {
+    background: #3492ed;
+  }
 
-.user-info-tabs .ant-form {
-  max-width: 580px;
-  margin-top: 20px;
-  padding: 0 24px;
-}
+  .user-account-list .user-account-icon.anticon-wechat {
+    background: #4daf29;
+  }
 
-/* 用户账号绑定列表 */
-.user-account-list {
-  margin-bottom: 27px;
-}
-
-.user-account-list > .ele-cell {
-  padding: 18px 34px;
-}
-
-.user-account-list .user-account-icon {
-  color: #fff;
-  padding: 8px;
-  font-size: 26px;
-  border-radius: 50%;
-}
-
-.user-account-list .user-account-icon.anticon-qq {
-  background: #3492ed;
-}
-
-.user-account-list .user-account-icon.anticon-wechat {
-  background: #4daf29;
-}
-
-.user-account-list .user-account-icon.anticon-alipay {
-  background: #1476fe;
-}
+  .user-account-list .user-account-icon.anticon-alipay {
+    background: #1476fe;
+  }
 </style>

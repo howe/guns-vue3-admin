@@ -50,10 +50,8 @@ export class FileApi {
    * @author fengshuonan
    * @date 2021/4/1 14:34
    */
-  static commonUpload(secretFlag, params) {
-    // 添加secretFlag属性
-    params.secretFlag = secretFlag;
-    return defHttp.uploadFile({ url: FileUploadUrl }, params);
+  static commonUpload(params) {
+    return defHttp.post({ url: FileUploadUrl , params },  { isTransformResponse: false });
   }
 
   /**
