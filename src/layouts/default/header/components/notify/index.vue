@@ -7,8 +7,8 @@
       :trigger="['click']"
       :overlay-style="{ padding: '0 10px' }"
     >
-      <a-badge :count="unreadNum" class="ele-notice-trigger" :offset="[6, 4]">
-        <bell-outlined style="padding: 8px 0" />
+      <a-badge :count="unreadNum" class="ele-notice-trigger" :offset="[-2, 13]">
+        <bell-outlined style="padding: 8px 12px; font-size: 16px" />
       </a-badge>
       <template #overlay>
         <div class="ant-dropdown-menu ele-notice-pop">
