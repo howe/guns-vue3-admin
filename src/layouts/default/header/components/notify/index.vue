@@ -1,91 +1,193 @@
+<!-- 顶栏消息通知 -->
 <template>
   <div :class="prefixCls">
-    <Popover title="" trigger="click" :overlayClassName="`${prefixCls}__overlay`">
-      <Badge :count="count" dot :numberStyle="numberStyle">
-        <BellOutlined />
-      </Badge>
-      <template #content>
-        <Tabs>
-          <template v-for="item in listData" :key="item.key">
-            <TabPane>
-              <template #tab>
-                {{ item.name }}
-                <span v-if="item.list.length !== 0">({{ item.list.length }})</span>
-              </template>
-              <!-- 绑定title-click事件的通知列表中标题是“可点击”的-->
-              <NoticeList :list="item.list" v-if="item.key === '1'" @title-click="onNoticeClick" />
-              <NoticeList :list="item.list" v-else />
-            </TabPane>
-          </template>
-        </Tabs>
+    <a-dropdown
+      v-model:visible="visible"
+      placement="bottom"
+      :trigger="['click']"
+      :overlay-style="{ padding: '0 10px' }"
+    >
+      <a-badge :count="unreadNum" class="ele-notice-trigger" :offset="[6, 4]">
+        <bell-outlined style="padding: 8px 0" />
+      </a-badge>
+      <template #overlay>
+        <div class="ant-dropdown-menu ele-notice-pop">
+          <div @click.stop="">
+            <a-tabs v-model:active-key="active" :centered="true">
+              <a-tab-pane key="notice" :tab="noticeTitle">
+                <a-list item-layout="horizontal" :data-source="notice">
+                  <template #renderItem="{ item }">
+                    <a-list-item>
+                      <a-list-item-meta
+                        :title="item.messageTitle"
+                        :description="item.messageSendTime"
+                        @click="noticeDetail(item)"
+                      >
+                        <template #avatar>
+                          <a-avatar :style="{ background: '#60B2FC' }">
+                            <template #icon>
+                              <component :is="'NotificationFilled'" />
+                            </template>
+                          </a-avatar>
+                        </template>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </template>
+                </a-list>
+                <div v-if="notice.length" class="ele-cell ele-notice-actions">
+                  <div class="ele-cell-content" @click="clearNotice">清空通知</div>
+                  <a-divider type="vertical" />
+                  <div @click="lookMore" class="ele-cell-content">查看更多</div>
+                </div>
+              </a-tab-pane>
+            </a-tabs>
+          </div>
+        </div>
       </template>
-    </Popover>
+    </a-dropdown>
+
+    <!--消息详情对话框-->
+    <a-modal
+      v-model:visible="noticeDetailShow"
+      :title="noticeDetailObject.messageTitle"
+      @ok="closeDetail"
+      :footer="null"
+      :maskClosable="false"
+    >
+      <p>{{ noticeDetailObject.messageContent }}</p>
+    </a-modal>
   </div>
 </template>
-<script lang="ts">
-  import { computed, defineComponent, ref } from 'vue';
-  import { Popover, Tabs, Badge } from 'ant-design-vue';
-  import { BellOutlined } from '@ant-design/icons-vue';
-  import { tabListData, ListItem } from './data';
-  import NoticeList from './NoticeList.vue';
+
+<script setup lang="ts" name="HeaderNotice">
+  import { computed, ref } from 'vue';
+  import { NoticeApi } from '/@/api/system/notice/NoticeApi';
+  import { useNoticeStore } from '/@/store/modules/notice';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useRouter } from 'vue-router';
 
-  export default defineComponent({
-    components: { Popover, BellOutlined, Tabs, TabPane: Tabs.TabPane, Badge, NoticeList },
-    setup() {
-      const { prefixCls } = useDesign('header-notify');
-      const { createMessage } = useMessage();
-      const listData = ref(tabListData);
+  const { prefixCls } = useDesign('header-notify');
+  let noticeStore = useNoticeStore();
+  let router = useRouter();
 
-      const count = computed(() => {
-        let count = 0;
-        for (let i = 0; i < tabListData.length; i++) {
-          count += tabListData[i].list.length;
-        }
-        return count;
-      });
+  // 是否显示消息详情对话框
+  const noticeDetailShow = ref<boolean>(false);
 
-      function onNoticeClick(record: ListItem) {
-        createMessage.success('你点击了通知，ID=' + record.id);
-        // 可以直接将其标记为已读（为标题添加删除线）,此处演示的代码会切换删除线状态
-        record.titleDelete = !record.titleDelete;
-      }
-
-      return {
-        prefixCls,
-        listData,
-        count,
-        onNoticeClick,
-        numberStyle: {},
-      };
-    },
+  // 通知详情的内容
+  const noticeDetailObject = ref<any>({
+    messageTitle: '',
+    messageContent: '',
   });
+
+  // 是否显示
+  const visible = ref<boolean>(false);
+  // 选项卡选中
+  const active = ref<string>('notice');
+  // 通知数据
+  const notice = computed(() => noticeStore.$state.unReadNoticeList);
+
+  // 通知标题
+  const noticeTitle = computed(() => {
+    return '通知' + (notice.value.length ? `(${notice.value.length})` : '');
+  });
+
+  // 未读数量
+  const unreadNum = computed(() => {
+    return notice.value.length;
+  });
+
+  /* 查询数据 */
+  const query = async () => {
+    // 获取用户所有的未读消息
+    let noticeList = await NoticeApi.getUnReadMessages();
+    noticeStore.setNotice(noticeList);
+  };
+
+  /* 清空通知 */
+  const clearNotice = () => {
+    noticeStore.setNotice([]);
+
+    // 调用接口，全部标记为已读
+    NoticeApi.messageSetRead();
+  };
+
+  /* 查看详情 */
+  const noticeDetail = (messageObject: any) => {
+    noticeDetailObject.value.messageTitle = messageObject.messageTitle;
+    noticeDetailObject.value.messageContent = messageObject.messageContent;
+    noticeDetailShow.value = true;
+
+    // 更新消息为已读状态
+    let param = { messageIdList: [messageObject.messageId] };
+    NoticeApi.batchUpdateReadFlag(param);
+
+    // 移除数组中已读消息
+    noticeStore.removeMessage(messageObject.messageId);
+  };
+
+  /* 清空通知 */
+  const closeDetail = () => {
+    noticeDetailShow.value = false;
+  };
+
+  /* 查看更多通知 */
+  const lookMore = () => {
+    router.push('/notice/mynotice');
+    visible.value = false;
+  };
+
+  // 查询未读消息
+  query();
 </script>
+
 <style lang="less">
-  @prefix-cls: ~'@{namespace}-header-notify';
+  .ele-notice-trigger.ant-badge {
+    color: inherit;
+  }
 
-  .@{prefix-cls} {
-    padding-top: 2px;
-
-    &__overlay {
-      max-width: 360px;
+  .ele-notice-pop {
+    &.ant-dropdown-menu {
+      padding: 0;
+      width: 336px;
+      max-width: 100%;
+      margin-top: 11px;
     }
 
-    .ant-tabs-content {
-      width: 300px;
+    // 内容
+    .ant-list-item {
+      padding-left: 24px;
+      padding-right: 24px;
+      transition: background-color 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        background: hsla(0, 0%, 60%, 0.05);
+      }
     }
 
-    .ant-badge {
-      font-size: 18px;
+    .ant-tag {
+      margin: 0;
+    }
 
-      .ant-badge-multiple-words {
-        padding: 0 4px;
-      }
+    // 操作按钮
+    .ele-notice-actions {
+      border-top: 1px solid hsla(0, 0%, 60%, 0.15);
 
-      svg {
-        width: 0.9em;
+      & > .ele-cell-content {
+        line-height: 46px;
+        text-align: center;
+        transition: background-color 0.3s;
+        cursor: pointer;
+        color: inherit;
+
+        &:hover {
+          background: hsla(0, 0%, 60%, 0.05);
+        }
       }
+    }
+
+    .ant-tabs-nav {
+      margin-bottom: 0;
     }
   }
 </style>
