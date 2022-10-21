@@ -34,7 +34,7 @@
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
       <div :class="`${prefixCls}-action__item `" @click="jumpGuns">
-        <img src="../../../assets/images/guns.png" alt="" class="guns-img">
+        <img src="../../../assets/images/guns.png" alt="" class="guns-img" />
         <span class="guns-title">Guns-DevOps</span>
       </div>
 
@@ -60,7 +60,7 @@
   </Header>
 </template>
 <script lang="ts">
-  import { defineComponent, unref, computed } from 'vue';
+  import { defineComponent, unref, computed, onMounted } from 'vue';
 
   import { propTypes } from '/@/utils/propTypes';
 
@@ -85,6 +85,10 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useLocale } from '/@/locales/useLocale';
+  import { WEBSOCKET_MESSAGE_TYPE } from '/@/config/settings';
+  import { GunsWebsocket } from '/@/utils/websocket';
+  import { useNoticeStore } from '/@/store/modules/notice';
+  import { useUserStore } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'LayoutHeader',
@@ -135,6 +139,10 @@
 
       const { getIsMobile } = useAppInject();
 
+      // store
+      const noticeStore = useNoticeStore();
+      const userStore = useUserStore();
+
       const getHeaderClass = computed(() => {
         const theme = unref(getHeaderTheme);
         return [
@@ -178,7 +186,21 @@
       // 跳转到guns
       const jumpGuns = () => {
         window.open('http://192.168.31.141:8080/guns-devops');
-      }
+      };
+
+      onMounted(async () => {
+        // 注册消息通知的websocket
+        try {
+          let gunsWebsocket = new GunsWebsocket(userStore?.userInfo?.wsUrl);
+          await gunsWebsocket.initWebSocket((result) => {
+            if (WEBSOCKET_MESSAGE_TYPE.server.SYS_NOTICE_MSG_TYPE === result.serverMsgType) {
+              noticeStore.addNotice(result.data);
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      });
 
       return {
         jumpGuns,
@@ -208,13 +230,13 @@
   });
 </script>
 <style lang="less">
-.guns-img {
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-}
-.guns-title {
-  font-size: 14px
-}
+  .guns-img {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+  }
+  .guns-title {
+    font-size: 14px;
+  }
   @import './index.less';
 </style>
