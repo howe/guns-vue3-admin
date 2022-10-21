@@ -105,7 +105,7 @@
       AppSearch,
       ErrorAction,
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
-        loading: true,
+        loading: true, 
       }),
     },
     props: {
