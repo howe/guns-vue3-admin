@@ -85,10 +85,11 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useLocale } from '/@/locales/useLocale';
-  import { WEBSOCKET_MESSAGE_TYPE } from '/@/config/settings';
+  import { GUNS_DEVOPS_URL, WEBSOCKET_MESSAGE_TYPE } from '/@/config/settings';
   import { GunsWebsocket } from '/@/utils/websocket';
   import { useNoticeStore } from '/@/store/modules/notice';
   import { useUserStore } from '/@/store/modules/user';
+  import { getToken } from '/@/utils/auth';
 
   export default defineComponent({
     name: 'LayoutHeader',
@@ -105,7 +106,7 @@
       AppSearch,
       ErrorAction,
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
-        loading: true, 
+        loading: true,
       }),
     },
     props: {
@@ -185,7 +186,7 @@
 
       // 跳转到guns
       const jumpGuns = () => {
-        window.open('http://192.168.31.141:8080/guns-devops');
+        window.open(GUNS_DEVOPS_URL + getToken());
       };
 
       onMounted(async () => {
