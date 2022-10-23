@@ -5,7 +5,7 @@ export const IS_NEED_RSA = false;
 export const REDIRECT_PATH = '/redirect';
 
 // guns-devops跳转路径
-export const GUNS_DEVOPS_URL = 'http://localhost:8080/guns-devops/tokenLogin?token=';
+export const GUNS_DEVOPS_URL = 'http://localhost:8080/guns-devops/tokenLogin?userToken=';
 
 // 消息类型常量
 export const WEBSOCKET_MESSAGE_TYPE = {
