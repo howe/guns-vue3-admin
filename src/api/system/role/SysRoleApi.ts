@@ -54,7 +54,10 @@ export class SysRoleApi {
    * @date 2021/8/11 10:42
    */
   static async grantMenu(params) {
-    return await defHttp.post({ url: '/sysRole/grantMenu', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysRole/grantMenu', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -64,7 +67,10 @@ export class SysRoleApi {
    * @date 2021/8/11 10:42
    */
   static async grantButton(params) {
-    return await defHttp.post({ url: '/sysRole/grantButton', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysRole/grantButton', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -74,7 +80,10 @@ export class SysRoleApi {
    * @date 2021/8/10 18:31
    */
   static async grantResource(params) {
-    return await defHttp.post({ url: '/sysRole/grantResourceV2', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysRole/grantResourceV2', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -84,7 +93,10 @@ export class SysRoleApi {
    * @date 2021/4/1 16:07
    */
   static async grantDataScope(params) {
-    return await defHttp.post({ url: '/sysRole/grantDataScope', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysRole/grantDataScope', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -93,7 +105,10 @@ export class SysRoleApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-   static async grantMenusAndButtons(params) {
-    return await defHttp.post({ url: '/sysRole/grantMenusAndButtons', params }, { isTransformResponse: false });
+  static async grantMenusAndButtons(params) {
+    return await defHttp.post(
+      { url: '/sysRole/grantMenusAndButtons', params },
+      { isTransformResponse: false },
+    );
   }
 }

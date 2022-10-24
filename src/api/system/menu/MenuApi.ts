@@ -84,6 +84,9 @@ export class MenuApi {
    * @date 2021/8/10 14:57
    */
   static async addMenuResourceBind(params) {
-    return await defHttp.post({ url: '/sysMenuResource/addMenuResourceBind', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysMenuResource/addMenuResourceBind', params },
+      { isTransformResponse: false },
+    );
   }
 }

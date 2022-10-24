@@ -14,7 +14,10 @@ export class ThemeTemplateRelApi {
    * @date 2021/12/27 10:19:44
    */
   static add(params) {
-    return defHttp.post({ url: "/sysThemeTemplateRel/add", params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplateRel/add', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -24,6 +27,9 @@ export class ThemeTemplateRelApi {
    * @date 2021/12/27 10:20:54
    */
   static del(params) {
-    return defHttp.post({ url: "/sysThemeTemplateRel/del", params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplateRel/del', params },
+      { isTransformResponse: false },
+    );
   }
 }

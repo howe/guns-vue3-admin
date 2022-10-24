@@ -23,8 +23,8 @@ export class UserPowerApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-     static getAdminList(params) {
-      return defHttp.get({ url: '/sysUser/backAuth/getAdminList', params });
+  static getAdminList(params) {
+    return defHttp.get({ url: '/sysUser/backAuth/getAdminList', params });
   }
 
   /**
@@ -33,17 +33,23 @@ export class UserPowerApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-   static addAdmin(params) {
-    return defHttp.post({ url: '/sysUser/backAuth/addAdmin', params }, { isTransformResponse: false });
-}
+  static addAdmin(params) {
+    return defHttp.post(
+      { url: '/sysUser/backAuth/addAdmin', params },
+      { isTransformResponse: false },
+    );
+  }
 
-/**
+  /**
    * 删除管理员
    *
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
- static delAdmin(params) {
-  return defHttp.post({ url: '/sysUser/backAuth/delAdmin', params }, { isTransformResponse: false });
-}
+  static delAdmin(params) {
+    return defHttp.post(
+      { url: '/sysUser/backAuth/delAdmin', params },
+      { isTransformResponse: false },
+    );
+  }
 }

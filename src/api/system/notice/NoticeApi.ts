@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-11 16:07:03
- */
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -49,7 +45,10 @@ export class NoticeApi {
    * @date 2021/6/12 18:20
    */
   static batchUpdateReadFlag(params) {
-    return defHttp.post({ url: '/sysMessage/batchUpdateReadFlag', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysMessage/batchUpdateReadFlag', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**

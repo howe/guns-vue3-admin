@@ -14,7 +14,10 @@ export class ThemeTemplateFieldApi {
    * @date 2021/12/20 11:21:42
    */
   static add(params) {
-    return defHttp.post({ url: '/sysThemeTemplateField/add', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplateField/add', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -24,7 +27,10 @@ export class ThemeTemplateFieldApi {
    * @date 2021/12/20 11:22:55
    */
   static del(params) {
-    return defHttp.post({ url: '/sysThemeTemplateField/del', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplateField/del', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -34,7 +40,10 @@ export class ThemeTemplateFieldApi {
    * @date 2021/12/20 11:24:57
    */
   static edit(params) {
-    return defHttp.post({ url: '/sysThemeTemplateField/edit', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplateField/edit', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**

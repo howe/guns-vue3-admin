@@ -7,7 +7,7 @@ export class UserApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-   static getUserPages(params) {
+  static getUserPages(params) {
     return defHttp.get({ url: '/sysUser/page', params });
   }
 
@@ -204,7 +204,7 @@ export class UserApi {
    * @date 2021/4/1 16:07
    */
   static granData(params) {
-    return defHttp.post({ url: '/sysUser/grantData', params },  { isTransformResponse: false });
+    return defHttp.post({ url: '/sysUser/grantData', params }, { isTransformResponse: false });
   }
 
   // -----在线用户界面使用------
@@ -215,7 +215,7 @@ export class UserApi {
    * @date 2021/4/13 14:47
    */
   static kickOff(params) {
-    return defHttp.post({ url: '/sysUser/removeSession', params },  { isTransformResponse: false });
+    return defHttp.post({ url: '/sysUser/removeSession', params }, { isTransformResponse: false });
   }
 
   /**
@@ -235,7 +235,10 @@ export class UserApi {
    * @date 2021/4/13 14:47
    */
   static bindUserList(params) {
-    return defHttp.post({ url: '/hrOrgApprover/bindUserList', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/hrOrgApprover/bindUserList', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**

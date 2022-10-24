@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-08 14:28:29
- */
 import { defHttp } from '/@/utils/http/axios';
 import { LoginParams, LoginResultModel, GetUserInfoModel, userInfoParams } from './model/userModel';
 

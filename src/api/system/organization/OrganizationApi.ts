@@ -64,7 +64,10 @@ export class OrganizationApi {
    * @date 2021/4/8 11:45
    */
   static batchDel(params) {
-    return defHttp.post({ url: '/hrOrganization/batchDelete', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/hrOrganization/batchDelete', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -94,7 +97,10 @@ export class OrganizationApi {
    * @date 2021/4/8 13:41
    */
   static updateStatus(params) {
-    return defHttp.post({ url: '/hrOrganization/updateStatus', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/hrOrganization/updateStatus', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -103,7 +109,7 @@ export class OrganizationApi {
    * @author chenjinlong
    * @date 2021/4/8 13:41
    */
-   static selector(params) {
+  static selector(params) {
     return defHttp.get({ url: '/sysUser/selectorAll', params });
   }
 }

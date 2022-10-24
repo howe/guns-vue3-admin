@@ -64,7 +64,10 @@ export class ThemeTemplateApi {
    * @date 2021/12/20 11:49:24
    */
   static updateTemplateStatus(params) {
-    return defHttp.post({ url: '/sysThemeTemplate/updateStatus', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysThemeTemplate/updateStatus', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**

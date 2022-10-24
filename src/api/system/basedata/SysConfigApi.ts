@@ -138,6 +138,9 @@ export class SysConfigApi {
    * @date 2021/7/9 11:04
    */
   static async initConfig(params) {
-    return await defHttp.post({ url: '/sysConfig/initConfig', params }, { isTransformResponse: false });
+    return await defHttp.post(
+      { url: '/sysConfig/initConfig', params },
+      { isTransformResponse: false },
+    );
   }
 }
