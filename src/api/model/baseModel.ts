@@ -78,3 +78,35 @@ export interface PageResult<T> {
   // 第几页,从1开始
   pageNo?: number;
 }
+
+/**
+ * 分页查询基本参数
+ */
+export interface PageParam {
+  // 第几页
+  pageNo?: number;
+  // 每页多少条
+  pageSize?: number;
+  // 排序字段
+  sort?: string;
+  // 排序方式, asc升序, desc降序
+  order?: string;
+}
+
+/**
+ * zTree 插件的节点封装
+ */
+export interface ZTreeNode {
+  id: string;
+  pId?: string;
+  name?: string;
+  open?: boolean;
+  checked?: boolean;
+  iconSkin?: string;
+  children?: ZTreeNode[];
+}
+
+export interface INode {
+  label?: string;
+  value: any;
+}
