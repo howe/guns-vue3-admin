@@ -117,11 +117,11 @@
       function handleChange(activeKey: any) {
         let appList: string[] = [];
         if (userStore.allMenuList && userStore.allMenuList.length > 0) {
-          userStore.allMenuList.forEach(item => {
+          userStore.allMenuList.forEach((item) => {
             if (valueIsExistTree(item.children, 'path', activeKey, 'children')) {
               appList = [item];
             }
-          })
+          });
         }
         if (userStore.menuList[0].path != appList[0].path) {
           userStore.setMenuList(appList[0]);

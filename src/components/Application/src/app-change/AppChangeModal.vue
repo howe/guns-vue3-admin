@@ -50,6 +50,8 @@
   import { useUserStore } from '/@/store/modules/user';
   import { usePermissionStore } from '/@/store/modules/permission';
   import { router } from '/@/router';
+  import { transformObjToRoute } from '/@/router/helper/routeHelper';
+  import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
   const props = defineProps({
     visible: { type: Boolean },
@@ -64,6 +66,7 @@
   const { prefixCls } = useDesign('app-search-modal');
   const [refs, setRefs] = useRefs();
   const { getIsMobile } = useAppInject();
+  const permissionStore = usePermissionStore();
 
   // 菜单列表
   const menuList = ref<Array<string | number>>([]);
@@ -98,14 +101,31 @@
   );
 
   // 应用点击
-  const handleEnter = async(item: any, index: number) => {
+  const handleEnter = async (item: any, index: number) => {
+    let arr = JSON.parse(JSON.stringify(item));
     activeIndex.value = index;
-    userStore.setMenuList(item);
-    const permissionStore = usePermissionStore();
-    permissionStore.setBackMenuList(item.children);
-    if (item.children && item.children.length > 0) {
-        router.replace(item.children[0].children[0].path);
+    if (item.path != userStore.menuList[0].path) {
+      //存入当前菜单列表
+      userStore.setMenuList(item);
+      
+      let str = transformObjToRoute(arr.children);
+      //  后台路由到菜单结构
+      const backMenuList = transformRouteToMenu(str);
+      permissionStore.setBackMenuList(backMenuList);
+      //获取已有的路由列表
+      let routerArr = router.getRoutes();
+      //加入路由列表
+      str.forEach((route) => {
+        if (!routerArr.find((item) => item.path == route.path)) {
+          router.addRoute(route);
+        }
+      });
     }
+    // 跳转页面
+    if (item.children && item.children.length > 0) {
+      await router.replace(item.children[0].children[0].path);
+    }
+    // 关闭弹框
     handleClose();
   };
 
