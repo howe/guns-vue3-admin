@@ -70,7 +70,7 @@
   const loading = ref<boolean>(false);
 
   // 表单数据
-  const { form, resetFields, assignFields } = useFormData<SysAppRequest>({
+  const { form, resetFormFields, assignFormFields } = useFormData<SysAppRequest>({
     appId: undefined,
     appName: undefined,
     appCode: undefined,
@@ -103,13 +103,13 @@
     (visible) => {
       if (visible) {
         if (props.data) {
-          assignFields(props.data);
+          assignFormFields(props.data);
           isUpdate.value = true;
         } else {
           isUpdate.value = false;
         }
       } else {
-        resetFields();
+        resetFormFields();
         formRef.value?.clearValidate();
       }
     },

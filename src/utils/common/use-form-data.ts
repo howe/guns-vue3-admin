@@ -7,13 +7,13 @@ import { reactive } from 'vue';
 export default function <T extends object>(initValue?: T) {
   const form = reactive<T>({ ...initValue } as T);
 
-  const resetFields = () => {
+  const resetFormFields = () => {
     Object.keys(form).forEach((key) => {
       form[key] = initValue ? initValue[key] : void 0;
     });
   };
 
-  const assignFields = (data: object) => {
+  const assignFormFields = (data: object) => {
     Object.keys(form).forEach((key) => {
       form[key] = data[key];
     });
@@ -22,8 +22,8 @@ export default function <T extends object>(initValue?: T) {
   return {
     form,
     // 重置为初始值
-    resetFields,
+    resetFormFields,
     // 赋值不改变字段
-    assignFields,
+    assignFormFields,
   };
 }
