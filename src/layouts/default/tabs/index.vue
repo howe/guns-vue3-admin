@@ -49,6 +49,8 @@
   import { listenerRouteChange } from '/@/logics/mitt/routeChange';
 
   import { useRouter } from 'vue-router';
+  import { valueIsExistTree } from '/@/utils/common/util';
+  import { usePermissionStore } from '/@/store/modules/permission';
 
   export default defineComponent({
     name: 'MultipleTabs',
@@ -111,8 +113,23 @@
           tabStore.addTab(unref(route));
         }
       });
-
+      // 切换tab
       function handleChange(activeKey: any) {
+        let appList: string[] = [];
+        if (userStore.allMenuList && userStore.allMenuList.length > 0) {
+          userStore.allMenuList.forEach(item => {
+            if (valueIsExistTree(item.children, 'path', activeKey, 'children')) {
+              appList = [item];
+            }
+          })
+        }
+        if (userStore.menuList[0].path != appList[0].path) {
+          userStore.setMenuList(appList[0]);
+          // 更换路由
+          const permissionStore = usePermissionStore();
+          permissionStore.setBackMenuList(appList[0].children);
+        }
+
         activeKeyRef.value = activeKey;
         go(activeKey, false);
       }

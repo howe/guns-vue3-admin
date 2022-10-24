@@ -17,7 +17,6 @@ import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
-import { getMenuList } from '/@/api/system/menu';
 import { getPermCode } from '/@/api/system/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -232,11 +231,10 @@ export const usePermissionStore = defineStore({
           try {
 
             // await this.changePermissionCode();
-            if (userStore.allMenuList && userStore.allMenuList.length > 0) {
-              this.setNewActiveTabData(userStore.allMenuList[0]);
-              routeList = userStore.allMenuList[0]?.children;
+            if (userStore.menuList && userStore.menuList.length > 0) {
+              this.setNewActiveTabData(userStore.menuList[0]);
+              routeList = userStore.menuList[0]?.children;
             }
-            // routeList = (await getMenuList()) as AppRouteRecordRaw[];
           } catch (error) {
             console.error(error);
           }

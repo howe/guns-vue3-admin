@@ -114,3 +114,27 @@ export function RsaEncry(data: any) {
   const cryptRespKeyStr = myEncrypt.encrypt(data);
   return cryptRespKeyStr;
 }
+
+/**
+ * 判断当前数据是否存在当前数据
+ * @author: nxy
+ * @Date: 2022-09-30 16:22:17
+ * @param {*} arr 所有的数据
+ * @param {*} name  tree中用于比较的值的名称
+ * @param {*} id 传过来用于比较的数据
+ * @param {*} children children的叫法
+ */
+export function valueIsExistTree(arr: string[], name: string, id: string, children: string) {
+  let stark: string[] = [];
+  stark = stark.concat(arr);
+  while (stark.length) {
+    const temp: any = stark.shift();
+    if (temp[children] && temp[children].length > 0) {
+      stark = stark.concat(temp[children]);
+    }
+    if (temp[name] === id) {
+      return temp[name];
+    }
+  }
+  return '';
+}

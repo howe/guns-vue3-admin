@@ -26,12 +26,13 @@ interface UserState {
   sessionTimeout?: boolean;
   lastUpdateTime: number;
   allMenuList: any;
+  menuList: any;
 }
 
 export const useUserStore = defineStore({
   id: 'app-user',
   state: (): UserState => ({
-    // user info
+    // 用户信息
     userInfo: null,
     // token
     token: undefined,
@@ -43,6 +44,8 @@ export const useUserStore = defineStore({
     lastUpdateTime: 0,
     // 所有的菜单集合
     allMenuList: [],
+    // 当前菜单集合
+    menuList: [],
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -78,8 +81,13 @@ export const useUserStore = defineStore({
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
     },
+    // 设置所有应用菜单列表
     setAllMenuList(list: string[]) {
       this.allMenuList = setMenu(list);
+    },
+    // 设置当前菜单列表
+    setMenuList(list: string[]) {
+      this.menuList = [list];
     },
     resetState() {
       this.userInfo = null;
@@ -138,6 +146,7 @@ export const useUserStore = defineStore({
       // 存所有菜单
       if (userInfo?.authorities) {
         this.setAllMenuList(userInfo.authorities);
+        this.setMenuList(this.allMenuList[0]);
         if (userInfo?.authorities[0]?.children[0]?.children[0]?.path) {
           userInfo.homePath = userInfo?.authorities[0]?.children[0]?.children[0]?.path;
         }
