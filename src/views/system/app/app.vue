@@ -62,7 +62,7 @@
 
           <template #bodyCell="{ column, record }">
             <template v-if="column.dataIndex == 'appName'">
-              <a @click="openEdit(record)">{{ record.appName }}</a>
+              <a @click="openDetail(record)">{{ record.appName }}</a>
             </template>
             <!-- table列表状态栏 -->
             <!-- 1是激活，2是禁用 -->
@@ -94,23 +94,23 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <sys-app-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit" />
+    <app-edit v-model:visible="showEdit" :data="current" @done="reload" />
+    <app-detail v-model:visible="showDetail" :data="current" />
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { reactive, ref, unref } from 'vue';
+<script name="SysApp" lang="ts" setup>
+  import { ref, unref } from 'vue';
   import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
-  import SysAppEdit from './app-edit.vue';
+  import useSearch from '/@/utils/common/use-search';
+  import AppEdit from './app-edit.vue';
+  import AppDetail from './app-detail.vue';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
-  import { SysApp } from '/@/api/system/app/model/SysAppModel';
+  import { SysApp, SysAppRequest } from '/@/api/system/app/model/SysAppModel';
 
   // 查询条件
-  const where = reactive({
-    appName: '',
-    appCode: '',
-  });
+  const { where, resetWhereFields } = useSearch<SysAppRequest>({});
 
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
@@ -120,6 +120,8 @@
 
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
+  // 是否显详情
+  const showDetail = ref<boolean>(false);
 
   // 表格配置
   const columns = ref<BasicColumn[]>([
@@ -180,8 +182,7 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.appName = '';
-    where.appCode = '';
+    resetWhereFields();
     reload();
   };
 
@@ -209,6 +210,15 @@
   };
 
   /**
+   * 打开详情抽屉
+   *
+   */
+  const openDetail = (row: SysApp) => {
+    current.value = row ?? null;
+    showDetail.value = true;
+  };
+
+  /**
    * 更新应用状态
    *
    * @author chenjinlong
@@ -223,5 +233,3 @@
     reload();
   };
 </script>
-
-<style></style>
