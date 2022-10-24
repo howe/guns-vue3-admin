@@ -62,7 +62,7 @@
 
           <template #bodyCell="{ column, record }">
             <template v-if="column.dataIndex == 'appName'">
-              <a @click="openDetail(record)">{{ record.appName }}</a>
+              <a @click="openEdit(record)">{{ record.appName }}</a>
             </template>
             <!-- table列表状态栏 -->
             <!-- 1是激活，2是禁用 -->
@@ -207,15 +207,6 @@
   const openEdit = (row?: SysApp) => {
     current.value = row ?? null;
     showEdit.value = true;
-  };
-
-  /**
-   * 打开详情抽屉
-   *
-   */
-  const openDetail = (row: SysApp) => {
-    current.value = row ?? null;
-    showDetail.value = true;
   };
 
   /**

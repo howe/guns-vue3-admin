@@ -1,13 +1,57 @@
 <!-- 应用编辑弹窗 -->
 <template>
+  <!-- 编辑 -->
+  <common-drawer
+    :width="800"
+    :visible="visible"
+    title="修改职位"
+    @close="updateVisible(false)"
+    v-if="isUpdate"
+  >
+    <a-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
+      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
+    >
+      <a-form-item label="应用名称" name="appName">
+        <a-input v-model:value="form.appName" placeholder="请输入应用名称" allow-clear />
+      </a-form-item>
+      <a-form-item label="应用编码" name="appCode">
+        <a-input
+          v-model:value="form.appCode"
+          placeholder="请输入应用编码"
+          allow-clear
+          :disabled="isUpdate"
+        />
+      </a-form-item>
+      <a-form-item label="应用图标">
+        <icon-picker v-model:value="form.appIcon" placeholder="请选择应用图标" />
+      </a-form-item>
+      <a-form-item label="应用排序" name="appSort">
+        <a-input-number
+          v-model:value="form.appSort"
+          placeholder="请填写应用排序"
+          style="width: 100%"
+        />
+      </a-form-item>
+    </a-form>
+    <template #extra>
+      <a-button type="primary" @click="save" :loading="loading">确定</a-button>
+    </template>
+  </common-drawer>
+
   <a-modal
     :width="460"
     :visible="visible"
     :confirm-loading="loading"
-    :title="isUpdate ? '修改应用' : '新建应用'"
+    title="修改应用"
     :body-style="{ paddingBottom: '8px' }"
     @update:visible="updateVisible"
     @ok="save"
+    v-else
+    @close="updateVisible(false)"
   >
     <a-form
       ref="formRef"
@@ -44,6 +88,7 @@
 <script name="SysAppEdit" lang="ts" setup>
   import { ref, reactive, watch } from 'vue';
   import { message } from 'ant-design-vue/es';
+  import CommonDrawer from '/@/components/CommonDrawer/index.vue';
   import type { FormInstance, Rule } from 'ant-design-vue/es/form';
   import IconPicker from '/@/components/icon-picker/main.vue';
   import useFormData from '/@/utils/common/use-form-data';
@@ -98,22 +143,19 @@
     ],
   });
 
-  watch(
-    () => props.visible,
-    (visible) => {
-      if (visible) {
-        if (props.data) {
-          assignFormFields(props.data);
-          isUpdate.value = true;
-        } else {
-          isUpdate.value = false;
-        }
+  watch([() => props.visible, () => props.data], () => {
+    if (props.visible) {
+      if (props.data) {
+        assignFormFields(props.data);
+        isUpdate.value = true;
       } else {
-        resetFormFields();
-        formRef.value?.clearValidate();
+        isUpdate.value = false;
       }
-    },
-  );
+    } else {
+      resetFormFields();
+      formRef.value?.clearValidate();
+    }
+  });
 
   /**
    * 保存编辑
