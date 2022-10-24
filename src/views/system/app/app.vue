@@ -50,7 +50,7 @@
           <template #toolbar>
             <div class="table-toolbar">
               <a-space>
-                <a-button type="primary" @click="openEdit()">
+                <a-button type="primary" @click="openAdd()">
                   <template #icon>
                     <plus-outlined />
                   </template>
@@ -95,6 +95,8 @@
 
     <!-- 编辑弹窗 -->
     <app-edit v-model:visible="showEdit" :data="current" @done="reload" />
+    <!-- 新增弹窗 -->
+    <app-add v-model:visible="showAdd" @done="reload" />
   </div>
 </template>
 
@@ -104,20 +106,20 @@
   import { message } from 'ant-design-vue';
   import useSearch from '/@/utils/common/use-search';
   import AppEdit from './app-edit.vue';
+  import AppAdd from './app-add.vue';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
   import { SysApp, SysAppRequest } from '/@/api/system/app/model/SysAppModel';
 
   // 查询条件
   const { where, resetWhereFields } = useSearch<SysAppRequest>({});
-
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
-
   // 当前行数据
   const current = ref<any>(null);
-
-  // 是否显示新增编辑弹框
+  // 是否显示编辑弹框
   const showEdit = ref<boolean>(false);
+  // 是否显示新增弹框
+  const showAdd = ref<boolean>(false);
 
   // 表格配置
   const columns = ref<BasicColumn[]>([
@@ -151,6 +153,7 @@
 
   // 表格实例
   const tableRef = ref<Nullable<TableActionType>>(null);
+
   // 获取表格action
   const getTableAction = () => {
     const tableAction = unref(tableRef);
@@ -195,7 +198,7 @@
   };
 
   /**
-   * 打开新建/编辑弹窗
+   * 打开编辑弹窗
    *
    * @author yxx
    * @date 2022/04/04 12:24
@@ -203,6 +206,16 @@
   const openEdit = (row?: SysApp) => {
     current.value = row ?? null;
     showEdit.value = true;
+  };
+
+  /**
+   * 打开新增弹窗
+   *
+   * @author yxx
+   * @date 2022/04/04 12:24
+   */
+  const openAdd = () => {
+    showAdd.value = true;
   };
 
   /**

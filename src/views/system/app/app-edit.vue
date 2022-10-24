@@ -1,13 +1,7 @@
 <!-- 应用编辑弹窗 -->
 <template>
   <!-- 编辑 -->
-  <common-drawer
-    :width="800"
-    :visible="visible"
-    title="修改应用"
-    @close="updateVisible(false)"
-    v-if="isUpdate"
-  >
+  <common-drawer :width="800" :visible="visible" title="修改应用" @close="updateVisible(false)">
     <a-form
       ref="formRef"
       :model="form"
@@ -19,12 +13,7 @@
         <a-input v-model:value="form.appName" placeholder="请输入应用名称" allow-clear />
       </a-form-item>
       <a-form-item label="应用编码" name="appCode">
-        <a-input
-          v-model:value="form.appCode"
-          placeholder="请输入应用编码"
-          allow-clear
-          :disabled="isUpdate"
-        />
+        <a-input v-model:value="form.appCode" placeholder="请输入应用编码" allow-clear disabled />
       </a-form-item>
       <a-form-item label="应用图标">
         <icon-picker v-model:value="form.appIcon" placeholder="请选择应用图标" />
@@ -41,48 +30,6 @@
       <a-button type="primary" @click="save" :loading="loading">确定</a-button>
     </template>
   </common-drawer>
-
-  <a-modal
-    :width="460"
-    :visible="visible"
-    :confirm-loading="loading"
-    title="修改应用"
-    :body-style="{ paddingBottom: '8px' }"
-    @update:visible="updateVisible"
-    @ok="save"
-    v-else
-    @close="updateVisible(false)"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
-      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
-    >
-      <a-form-item label="应用名称" name="appName">
-        <a-input v-model:value="form.appName" placeholder="请输入应用名称" allow-clear />
-      </a-form-item>
-      <a-form-item label="应用编码" name="appCode">
-        <a-input
-          v-model:value="form.appCode"
-          placeholder="请输入应用编码"
-          allow-clear
-          :disabled="isUpdate"
-        />
-      </a-form-item>
-      <a-form-item label="应用图标">
-        <icon-picker v-model:value="form.appIcon" placeholder="请选择应用图标" />
-      </a-form-item>
-      <a-form-item label="应用排序" name="appSort">
-        <a-input-number
-          v-model:value="form.appSort"
-          placeholder="请填写应用排序"
-          style="width: 100%"
-        />
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <script name="SysAppEdit" lang="ts" setup>
@@ -102,14 +49,11 @@
 
   const props = defineProps<{
     visible: boolean;
-    data?: SysApp | null;
+    data: SysApp;
   }>();
 
   // 表单实例
   const formRef = ref<FormInstance | null>(null);
-
-  // 是否是修改
-  const isUpdate = ref<boolean>(false);
 
   // 提交状态
   const loading = ref<boolean>(false);
@@ -145,12 +89,7 @@
 
   watch([() => props.visible, () => props.data], () => {
     if (props.visible) {
-      if (props.data) {
-        assignFormFields(props.data);
-        isUpdate.value = true;
-      } else {
-        isUpdate.value = false;
-      }
+      assignFormFields(props.data);
     } else {
       resetFormFields();
       formRef.value?.clearValidate();
@@ -171,9 +110,8 @@
       .validate()
       .then(() => {
         loading.value = true;
-        // 执行保存或编辑
-        const saveOrUpdate = isUpdate.value ? SysAppApi.edit : SysAppApi.add;
-        saveOrUpdate(form)
+        // 执行编辑
+        SysAppApi.edit(form)
           .then((res) => {
             // 移除加载框
             loading.value = false;
