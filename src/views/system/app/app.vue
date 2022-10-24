@@ -101,7 +101,7 @@
 </template>
 
 <script name="SysApp" lang="ts" setup>
-  import { ref, unref } from 'vue';
+  import { ref } from 'vue';
   import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
   import useSearch from '/@/utils/common/use-search';
@@ -154,15 +154,6 @@
   // 表格实例
   const tableRef = ref<Nullable<TableActionType>>(null);
 
-  // 获取表格action
-  const getTableAction = () => {
-    const tableAction = unref(tableRef);
-    if (!tableAction) {
-      throw new Error('tableAction is null');
-    }
-    return tableAction;
-  };
-
   /**
    * 点击查询
    * @author: nxy
@@ -170,7 +161,7 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    getTableAction().reload({
+    tableRef.value?.reload({
       page: 1,
     });
   };
