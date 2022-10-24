@@ -45,7 +45,10 @@ export class MenuButtonApi {
    * @date 2021/4/13 16:07
    */
   static addDefaultMenuButton(params) {
-    return defHttp.post({ url: '/sysMenuButton/addSystemDefaultButton', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysMenuButton/addSystemDefaultButton', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
@@ -75,6 +78,9 @@ export class MenuButtonApi {
    * @date 2021/4/13 16:07
    */
   static batchDeleteMenuButton(params) {
-    return defHttp.post({ url: '/sysMenuButton/batchDelete', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysMenuButton/batchDelete', params },
+      { isTransformResponse: false },
+    );
   }
 }

@@ -1,7 +1,3 @@
-<!--
- * @Author: nxy
- * @Date: 2022-10-09 09:56:08
--->
 <script lang="ts">
   import { defineComponent, computed, unref } from 'vue';
   import { BackTop } from 'ant-design-vue';

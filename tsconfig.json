@@ -40,6 +40,6 @@
     "mock/**/*.ts",
     "vite.config.ts",
     "src/components/TinymceEditor/util.js"
-  ],
+, "src/utils/websocket.js"  ],
   "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"]
 }

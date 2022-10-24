@@ -1,6 +1,6 @@
 ## 简介
 
-Guns 7.2.5，前端采用Vue Vben Admin。
+Guns 7.3.0，前端采用Vue Vben Admin。
 
 Vue Vben Admin是一个免费开源的中后台模版。使用了最新的`vue3`,`vite2`,`TypeScript`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
 
@@ -34,8 +34,6 @@ Vue Vben Admin是一个免费开源的中后台模版。使用了最新的`vue3`
 - 安装依赖
 
 ```bash
-cd vue-vben-admin
-
 yarn
 ```
 

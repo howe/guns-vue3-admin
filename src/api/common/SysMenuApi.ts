@@ -35,7 +35,7 @@ export class SysMenuApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-   static async roleBindMenuList(params) {
+  static async roleBindMenuList(params) {
     return await defHttp.get({ url: '/sysMenu/roleBindMenuList', params });
   }
 
@@ -45,7 +45,7 @@ export class SysMenuApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-   static async roleBindOperateList(params) {
+  static async roleBindOperateList(params) {
     return await defHttp.get({ url: '/sysMenu/roleBindOperateList', params });
   }
 
@@ -55,44 +55,52 @@ export class SysMenuApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-   static grantRoleMenus(params) {
+  static grantRoleMenus(params) {
     return defHttp.post({ url: '/sysRole/grantRoleMenus', params }, { isTransformResponse: false });
   }
 
-   /**
-    * 角色绑定按钮
-    * @author: nxy
-    * @Date: 2022-09-29 09:26:01
-    */  
-   static grantButton(params) {
+  /**
+   * 角色绑定按钮
+   * @author: nxy
+   * @Date: 2022-09-29 09:26:01
+   */
+  static grantButton(params) {
     return defHttp.post({ url: '/sysRole/grantButton', params }, { isTransformResponse: false });
   }
 
   /**
-    * 角色绑定菜单的全选
-    * @author: nxy
-    * @Date: 2022-09-29 09:26:01
-    */  
-   static grantAll(params) {
-    return defHttp.post({ url: '/sysRole/grantRoleMenus/grantAll', params }, { isTransformResponse: false });
+   * 角色绑定菜单的全选
+   * @author: nxy
+   * @Date: 2022-09-29 09:26:01
+   */
+  static grantAll(params) {
+    return defHttp.post(
+      { url: '/sysRole/grantRoleMenus/grantAll', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
-    * 角色绑定操作权限的全选
-    * @author: nxy
-    * @Date: 2022-09-29 09:26:01
-    */  
-   static grantButtonAll(params) {
-    return defHttp.post({ url: '/sysRole/grantButton/grantAll', params }, { isTransformResponse: false });
+   * 角色绑定操作权限的全选
+   * @author: nxy
+   * @Date: 2022-09-29 09:26:01
+   */
+  static grantButtonAll(params) {
+    return defHttp.post(
+      { url: '/sysRole/grantButton/grantAll', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**
-    * 角色绑定分配接口的全选
-    * @author: nxy
-    * @Date: 2022-09-29 09:26:01
-    */  
-   static grantResourceV2All(params) {
-    return defHttp.post({ url: '/sysRole/grantResourceV2/grantAll', params }, { isTransformResponse: false });
+   * 角色绑定分配接口的全选
+   * @author: nxy
+   * @Date: 2022-09-29 09:26:01
+   */
+  static grantResourceV2All(params) {
+    return defHttp.post(
+      { url: '/sysRole/grantResourceV2/grantAll', params },
+      { isTransformResponse: false },
+    );
   }
-  
 }

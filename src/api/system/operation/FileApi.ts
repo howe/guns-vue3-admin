@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-11 17:57:49
- */
 import { defHttp } from '/@/utils/http/axios';
 
 const API_BASE_PREFIX = import.meta.env.VITE_GLOB_API_URL;
@@ -50,10 +46,8 @@ export class FileApi {
    * @author fengshuonan
    * @date 2021/4/1 14:34
    */
-  static commonUpload(secretFlag, params) {
-    // 添加secretFlag属性
-    params.secretFlag = secretFlag;
-    return defHttp.uploadFile({ url: FileUploadUrl }, params);
+  static commonUpload(params) {
+    return defHttp.post({ url: FileUploadUrl, params }, { isTransformResponse: false });
   }
 
   /**
@@ -64,7 +58,10 @@ export class FileApi {
    * @date 2021/4/12 22:02
    */
   static delete(params) {
-    return defHttp.post({ url: '/sysFileInfo/deleteReally', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/sysFileInfo/deleteReally', params },
+      { isTransformResponse: false },
+    );
   }
 
   /**

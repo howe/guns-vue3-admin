@@ -25,6 +25,11 @@
         />
         <MenuDivider />
         <MenuItem
+          key="profile"
+          :text="t('个人中心')"
+          icon="ant-design:user-outlined"
+        />
+        <MenuItem
           key="password"
           :text="t('修改密码')"
           icon="ant-design:key-outlined"
@@ -70,6 +75,7 @@
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useSystemStore } from '/@/store/modules/system';
   import PasswordModal from './password-modal.vue';
+  import { router } from '/@/router';
 
   type MenuEvent = 'logout' | 'doc' | 'lock';
 
@@ -139,6 +145,9 @@
             break;
           case 'password':
             passwordVisible.value = true;
+            break;
+          case 'profile':
+            router.push('/personal/info');
             break;
         }
       }

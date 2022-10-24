@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-08 14:28:29
- */
 /**
  * @description: Login interface parameters
  */

@@ -1,7 +1,3 @@
-/*
- * @Author: nxy
- * @Date: 2022-10-11 16:07:03
- */
 import { defHttp } from '/@/utils/http/axios';
 
 /**

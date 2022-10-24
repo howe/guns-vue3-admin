@@ -38,6 +38,7 @@
   import SysconfigForm from './sysconfig-form.vue';
   import { reactive, ref, watch, nextTick, onMounted } from 'vue';
   import CommonDrawer from '/@/components/CommonDrawer/index.vue';
+  import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
 
   const props = defineProps<{
     // 弹窗是否打开

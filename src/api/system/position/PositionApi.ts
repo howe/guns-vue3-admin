@@ -74,6 +74,9 @@ export class PositionApi {
    * @date 2021/4/8 13:41
    */
   static updateStatus(params) {
-    return defHttp.post({ url: '/hrPosition/updateStatus', params }, { isTransformResponse: false });
+    return defHttp.post(
+      { url: '/hrPosition/updateStatus', params },
+      { isTransformResponse: false },
+    );
   }
 }
