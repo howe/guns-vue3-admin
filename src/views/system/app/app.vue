@@ -50,7 +50,7 @@
           <template #toolbar>
             <div class="table-toolbar">
               <a-space>
-                <a-button type="primary" @click="openEdit()">
+                <a-button type="primary" @click="openAdd()">
                   <template #icon>
                     <plus-outlined />
                   </template>
@@ -94,32 +94,32 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <sys-app-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit" />
+    <app-edit v-model:visible="showEdit" :data="current" @done="reload" />
+    <!-- 新增弹窗 -->
+    <app-add v-model:visible="showAdd" @done="reload" />
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { reactive, ref, unref } from 'vue';
+<script name="SysApp" lang="ts" setup>
+  import { ref } from 'vue';
   import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
-  import SysAppEdit from './app-edit.vue';
+  import useSearch from '/@/utils/common/use-search';
+  import AppEdit from './app-edit.vue';
+  import AppAdd from './app-add.vue';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
-  import { SysApp } from '/@/api/system/app/model/SysAppModel';
+  import { SysApp, SysAppRequest } from '/@/api/system/app/model/SysAppModel';
 
   // 查询条件
-  const where = reactive({
-    appName: '',
-    appCode: '',
-  });
-
+  const { where, resetWhereFields } = useSearch<SysAppRequest>({});
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
-
   // 当前行数据
   const current = ref<any>(null);
-
-  // 是否显示新增编辑弹框
+  // 是否显示编辑弹框
   const showEdit = ref<boolean>(false);
+  // 是否显示新增弹框
+  const showAdd = ref<boolean>(false);
 
   // 表格配置
   const columns = ref<BasicColumn[]>([
@@ -153,14 +153,6 @@
 
   // 表格实例
   const tableRef = ref<Nullable<TableActionType>>(null);
-  // 获取表格action
-  const getTableAction = () => {
-    const tableAction = unref(tableRef);
-    if (!tableAction) {
-      throw new Error('tableAction is null');
-    }
-    return tableAction;
-  };
 
   /**
    * 点击查询
@@ -169,7 +161,7 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    getTableAction().reload({
+    tableRef.value?.reload({
       page: 1,
     });
   };
@@ -180,8 +172,7 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.appName = '';
-    where.appCode = '';
+    resetWhereFields();
     reload();
   };
 
@@ -198,14 +189,24 @@
   };
 
   /**
-   * 打开新建/编辑弹窗
+   * 打开编辑弹窗
    *
    * @author yxx
    * @date 2022/04/04 12:24
    */
-  const openEdit = (row?: SysApp) => {
-    current.value = row ?? null;
+  const openEdit = (row: SysApp) => {
+    current.value = row;
     showEdit.value = true;
+  };
+
+  /**
+   * 打开新增弹窗
+   *
+   * @author yxx
+   * @date 2022/04/04 12:24
+   */
+  const openAdd = () => {
+    showAdd.value = true;
   };
 
   /**
@@ -223,5 +224,3 @@
     reload();
   };
 </script>
-
-<style></style>

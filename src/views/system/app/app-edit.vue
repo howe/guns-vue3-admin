@@ -1,148 +1,143 @@
+<!-- 应用编辑弹窗 -->
 <template>
-  <div>
-    <!-- 编辑 -->
-    <common-drawer
-      :width="800"
-      :visible="visible"
-      title="修改应用"
-      @close="updateVisible(false)"
-      v-if="isUpdate"
+  <!-- 编辑 -->
+  <common-drawer :width="800" :visible="visible" title="修改应用" @close="updateVisible(false)">
+    <a-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
+      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
     >
-      <app-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></app-form>
-      <template #extra>
-        <a-button type="primary" @click="save" :loading="loading">确定</a-button>
-      </template>
-    </common-drawer>
-
-    <!-- 新增 -->
-    <a-modal
-      :width="800"
-      :maskClosable="false"
-      :visible="visible"
-      :confirm-loading="loading"
-      :forceRender="true"
-      title="新建应用"
-      :body-style="{ paddingBottom: '8px' }"
-      @update:visible="updateVisible"
-      @ok="save"
-      v-else
-      @close="updateVisible(false)"
-    >
-      <app-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></app-form>
-    </a-modal>
-  </div>
+      <a-form-item label="应用名称" name="appName">
+        <a-input v-model:value="form.appName" placeholder="请输入应用名称" allow-clear />
+      </a-form-item>
+      <a-form-item label="应用编码" name="appCode">
+        <a-input v-model:value="form.appCode" placeholder="请输入应用编码" allow-clear disabled />
+      </a-form-item>
+      <a-form-item label="应用图标">
+        <icon-picker v-model:value="form.appIcon" placeholder="请选择应用图标" />
+      </a-form-item>
+      <a-form-item label="应用排序" name="appSort">
+        <a-input-number
+          v-model:value="form.appSort"
+          placeholder="请填写应用排序"
+          style="width: 100%"
+        />
+      </a-form-item>
+    </a-form>
+    <template #extra>
+      <a-button type="primary" @click="save" :loading="loading">确定</a-button>
+    </template>
+  </common-drawer>
 </template>
 
-<script lang="ts" setup>
+<script name="SysAppEdit" lang="ts" setup>
+  import { ref, reactive, watch } from 'vue';
+  import { message } from 'ant-design-vue/es';
   import CommonDrawer from '/@/components/CommonDrawer/index.vue';
-  import { message } from 'ant-design-vue';
+  import type { FormInstance, Rule } from 'ant-design-vue/es/form';
+  import IconPicker from '/@/components/icon-picker/main.vue';
+  import useFormData from '/@/utils/common/use-form-data';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
-  import AppForm from './app-form.vue';
-  import { onMounted, reactive, ref, watch } from 'vue';
+  import { SysApp, SysAppRequest } from '/@/api/system/app/model/SysAppModel';
+
+  const emit = defineEmits<{
+    (e: 'done'): void;
+    (e: 'update:visible', value: boolean): void;
+  }>();
 
   const props = defineProps<{
-    // 弹窗是否打开
-    visible: Boolean;
-    // 修改回显的数据
-    data?: Object;
+    visible: boolean;
+    data: SysApp;
   }>();
 
-  const emits = defineEmits<{
-    (e: 'update:visible', visible: boolean): void;
-    (e: 'done'): void;
-  }>();
-
-  // 是否是编辑
-  const isUpdate = ref<boolean>(false);
+  // 表单实例
+  const formRef = ref<FormInstance | null>(null);
 
   // 提交状态
   const loading = ref<boolean>(false);
 
-  const state = reactive({
-    form: {},
+  // 表单数据
+  const { form, resetFormFields, assignFormFields } = useFormData<SysAppRequest>({
+    appId: undefined,
+    appName: undefined,
+    appCode: undefined,
+    appIcon: undefined,
+    appSort: undefined,
   });
 
-  // ref
-  const formRef = ref(null);
+  // 表单验证规则
+  const rules = reactive<Record<string, Rule[]>>({
+    appName: [
+      {
+        required: true,
+        message: '请输入应用名称',
+        type: 'string',
+        trigger: 'blur',
+      },
+    ],
+    appCode: [
+      {
+        required: true,
+        message: '请输入应用编码',
+        type: 'string',
+        trigger: 'blur',
+      },
+    ],
+  });
 
-  /**
-   * 更新编辑界面弹框是否显示
-   *
-   * @author fengshuonan
-   * @date 2021/6/14 20:24
-   */
-  const updateVisible = (value: boolean) => {
-    emits('update:visible', value);
-  };
-
-  // 初始化
-  const init = () => {
-    if (props.data) {
-      state.form = Object.assign({}, props.data);
-      isUpdate.value = true;
+  watch([() => props.visible, () => props.data], () => {
+    if (props.visible) {
+      assignFormFields(props.data);
     } else {
-      state.form = {};
-      isUpdate.value = false;
+      resetFormFields();
+      formRef.value?.clearValidate();
     }
-    if (formRef.value && formRef.value.$refs.formRef) {
-      formRef.value.$refs.formRef.clearValidate();
-    }
-  };
-
-  onMounted(() => {
-    init();
   });
 
-  watch(
-    () => props.data,
-    (val) => {
-      init();
-    },
-  );
-
   /**
-   * 保存和编辑
+   * 保存编辑
    *
-   * @author chenjinlong
-   * @date 2021/4/7 11:00
+   * @author yxx
+   * @date 2022/6/14 20:24
    */
   const save = () => {
-    // 校验表单
-    formRef.value.$refs.formRef.validate().then((valid) => {
-      if (valid) {
-        // 修改加载框为正在加载
+    if (!formRef.value) {
+      return;
+    }
+    formRef.value
+      .validate()
+      .then(() => {
         loading.value = true;
-
-        let result = null;
-
-        // 执行编辑或修改方法
-        if (isUpdate.value) {
-          result = SysAppApi.edit(state.form);
-        } else {
-          result = SysAppApi.add(state.form);
-        }
-        result
-          .then((result) => {
+        // 执行编辑
+        SysAppApi.edit(form)
+          .then((res) => {
             // 移除加载框
             loading.value = false;
-
             // 提示添加成功
-            message.success(result.message);
-
-            // 如果是新增，则form表单置空
-            if (!isUpdate.value) {
-              state.form = {};
-            }
+            message.success(res.message);
             // 关闭弹框，通过控制visible的值，传递给父组件
             updateVisible(false);
-            emits('done');
+            // 触发父组件done事件
+            emit('done');
           })
           .catch(() => {
             loading.value = false;
           });
-      }
-    });
+      })
+      .catch(() => {});
+  };
+
+  /**
+   * 更新编辑界面弹框是否显示
+   *
+   * @author yxx
+   * @date 2022/6/14 20:24
+   */
+  const updateVisible = (value) => {
+    emit('update:visible', value);
   };
 </script>
 
-<style></style>
+<style scoped></style>

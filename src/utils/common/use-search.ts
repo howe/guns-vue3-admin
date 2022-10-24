@@ -7,13 +7,13 @@ import { reactive } from 'vue';
 export default function <T extends object>(initValue?: T) {
   const where = reactive<T>({ ...initValue } as T);
 
-  const resetFields = () => {
+  const resetWhereFields = () => {
     Object.keys(where).forEach((key) => {
       where[key] = initValue ? initValue[key] : void 0;
     });
   };
 
-  const assignFields = (data: object) => {
+  const assignWhereFields = (data: object) => {
     Object.keys(where).forEach((key) => {
       where[key] = data[key];
     });
@@ -21,7 +21,7 @@ export default function <T extends object>(initValue?: T) {
 
   return {
     where,
-    resetFields,
-    assignFields,
+    resetWhereFields,
+    assignWhereFields,
   };
 }
