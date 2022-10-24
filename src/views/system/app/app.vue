@@ -194,8 +194,8 @@
    * @author yxx
    * @date 2022/04/04 12:24
    */
-  const openEdit = (row?: SysApp) => {
-    current.value = row ?? null;
+  const openEdit = (row: SysApp) => {
+    current.value = row;
     showEdit.value = true;
   };
 
