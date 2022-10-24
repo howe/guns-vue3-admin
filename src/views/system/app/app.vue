@@ -95,7 +95,6 @@
 
     <!-- 编辑弹窗 -->
     <app-edit v-model:visible="showEdit" :data="current" @done="reload" />
-    <app-detail v-model:visible="showDetail" :data="current" />
   </div>
 </template>
 
@@ -105,7 +104,6 @@
   import { message } from 'ant-design-vue';
   import useSearch from '/@/utils/common/use-search';
   import AppEdit from './app-edit.vue';
-  import AppDetail from './app-detail.vue';
   import { SysAppApi } from '/@/api/system/app/SysAppApi';
   import { SysApp, SysAppRequest } from '/@/api/system/app/model/SysAppModel';
 
@@ -120,8 +118,6 @@
 
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
-  // 是否显详情
-  const showDetail = ref<boolean>(false);
 
   // 表格配置
   const columns = ref<BasicColumn[]>([
