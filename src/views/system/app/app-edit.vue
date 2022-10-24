@@ -4,7 +4,7 @@
   <common-drawer
     :width="800"
     :visible="visible"
-    title="修改职位"
+    title="修改应用"
     @close="updateVisible(false)"
     v-if="isUpdate"
   >
