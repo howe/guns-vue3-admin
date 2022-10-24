@@ -39,12 +39,10 @@
   });
 
   watch(
-    () => props.visible,
-    (visible) => {
-      if (visible) {
-        if (props.data) {
-          Object.assign(sysAppInfo, props.data);
-        }
+    () => props.data,
+    () => {
+      if (props.data) {
+        Object.assign(sysAppInfo, props.data);
       }
     },
   );
