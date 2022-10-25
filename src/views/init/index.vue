@@ -3,28 +3,40 @@
     <div class="ele-body" style="background-color: #fafafa">
       <a-card>
         <a-row>
-          <a-col :span="16" :offset="4" class="content">
+          <a-col :span="18" :offset="3" class="content">
             <div class="content-top">
               <h5>首次安装程序</h5>
             </div>
             <a-form :model="form" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
-              <a-form-item v-for="(item, index) in configList" :key="index">
-                <template #label>
-                  <a-tooltip>
-                    <template #title>{{ item.configDescription }}</template>
-                    {{ item.configName }}
-                  </a-tooltip>
-                </template>
-                <a-input
-                  :name="item.configCode"
-                  v-model:value="form[item.configCode]"
-                  :placeholder="item.configDescription"
-                />
-              </a-form-item>
-              <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                <a-button type="primary" @click="onSubmit">提交</a-button>
-                <a-button @click="onReset" style="margin-left: 10px">重置</a-button>
-              </a-form-item>
+              <div class="content-row">{{ configList.description }}</div>
+              <div
+                v-for="(conItem, conIndex) in configList.initConfigGroupList"
+                :key="conIndex + 'con'"
+              >
+                <div class="content-row content-item">{{ conItem.title }}</div>
+                <div class="content-row">{{ conItem.description }}</div>
+                <a-row v-for="(item, index) in conItem.configInitItemList" :key="index + 'init'">
+                  <a-col :span="16">
+                    <a-form-item>
+                      <template #label>
+                        {{ item.configName }}
+                      </template>
+                      <a-input
+                        :name="item.configCode"
+                        v-model:value="form[item.configCode]"
+                        :placeholder="item.configDescription"
+                      />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="8" style="color: #98999b;">{{ item.configDescription }}</a-col>
+                </a-row>
+              </div>
+              <div class="button-item">
+                <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                  <a-button type="primary" @click="onSubmit">提交</a-button>
+                  <a-button @click="onReset" style="margin-left: 10px">重置</a-button>
+                </a-form-item>
+              </div>
             </a-form>
           </a-col>
         </a-row>
@@ -65,22 +77,26 @@
 
     // 获取需要初始化的系统配置
     configList.value = await SysConfigApi.getInitConfigList();
-    for (const item of configList.value) {
-      // 替换主机名为url的访问地址
-      if (item.configCode === 'SYS_SERVER_DEPLOY_HOST') {
-        form[item.configCode] = item.configValue?.replace(
-          'localhost:8080',
-          window.location.host + '/api',
-        );
-      } else if (item.configCode === 'WEB_SOCKET_WS_URL') {
-        form[item.configCode] = item.configValue?.replace(
-          'localhost:8080',
-          window.location.host + '/api',
-        );
-      } else {
-        form[item.configCode] = item.configValue;
+    configList.value.initConfigGroupList.forEach((conItem) => {
+      for (const item of conItem.configInitItemList) {
+        // 替换主机名为url的访问地址
+        if (item.configCode === 'SYS_SERVER_DEPLOY_HOST') {
+          form[item.configCode] = item.configValue?.replace(
+            'localhost:8080',
+            window.location.host + '/api',
+          );
+        } else if (item.configCode === 'WEB_SOCKET_WS_URL') {
+          form[item.configCode] = item.configValue?.replace(
+            'localhost:8080',
+            window.location.host + '/api',
+          );
+        } else {
+          form[item.configCode] = item.configValue;
+        }
       }
-    }
+    });
+
+    console.log(form);
   });
 
   // 提交初始化配置
@@ -122,5 +138,19 @@
     line-height: 32px;
     background: #ccc;
     margin-bottom: 10px;
+  }
+  .content-row {
+    margin: 20px;
+    text-align: center;
+  }
+  .content-item {
+    font-weight: 700;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #eee;
+  }
+  .button-item {
+    margin: 20px;
+    border-top: 2px solid #eee;
+    padding-top: 20px;
   }
 </style>

@@ -2,10 +2,8 @@
   <div>12333</div>
 </template>
 
-<script>
-export default {
+<script lang="ts" setup>
 
-}
 </script>
 
 <style>
