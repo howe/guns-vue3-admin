@@ -104,9 +104,9 @@
   const handleEnter = async (item: any, index: number) => {
     let arr = JSON.parse(JSON.stringify(item));
     activeIndex.value = index;
-    if (item.path != userStore.menuList[0].path) {
+    if (arr.path != userStore.menuList[0].path) {
       //存入当前菜单列表
-      userStore.setMenuList(item);
+      userStore.setMenuList(arr);
       
       let str = transformObjToRoute(arr.children);
       //  后台路由到菜单结构
@@ -116,7 +116,7 @@
       let routerArr = router.getRoutes();
       //加入路由列表
       str.forEach((route) => {
-        if (!routerArr.find((item) => item.path == route.path)) {
+        if (!routerArr.find((routeItem) => routeItem.path == route.path)) {
           router.addRoute(route);
         }
       });
