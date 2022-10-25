@@ -14,6 +14,8 @@ import { MULTIPLE_TABS_KEY } from '/@/enums/cacheEnum';
 
 import projectSetting from '/@/settings/projectSetting';
 import { useUserStore } from '/@/store/modules/user';
+import { valueIsExistTree } from '/@/utils/common/util';
+import { usePermissionStore } from '/@/store/modules/permission';
 
 export interface MultipleTabState {
   cacheTabList: Set<string>;
@@ -225,6 +227,7 @@ export const useMultipleTabStore = defineStore({
         const isActivated = this.tabList.findIndex((item) => {
           return item.fullPath === currentRoute.value.fullPath;
         });
+        changeMenuList(currentRoute.value.fullPath);
         // 如果当前路由不存在于TabList中，尝试切换到其它路由
         if (isActivated === -1) {
           let pageIndex;
@@ -240,6 +243,25 @@ export const useMultipleTabStore = defineStore({
             const toTarget = getToTarget(page);
             await replace(toTarget);
           }
+        }
+      }
+
+      // 设置菜单列表
+      function changeMenuList(activeKey) {
+        let appList: any = [];
+        const userStore = useUserStore();
+        if (userStore.allMenuList && userStore.allMenuList.length > 0) {
+          userStore.allMenuList.forEach((item) => {
+            if (valueIsExistTree(item.children, 'path', activeKey, 'children')) {
+              appList = [item];
+            }
+          });
+        }
+        if (userStore.menuList[0].path != appList[0].path) {
+          userStore.setMenuList(appList[0]);
+          // 更换路由
+          const permissionStore = usePermissionStore();
+          permissionStore.setBackMenuList(appList[0].children);
         }
       }
     },
