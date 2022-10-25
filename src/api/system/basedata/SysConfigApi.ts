@@ -1,3 +1,12 @@
+import { PageResult } from '../../model/baseModel';
+import {
+  ConfigInitItem,
+  ConfigInitRequest,
+  SysConfig,
+  SysConfigParam,
+} from './model/SysConfigModel';
+import { DictRequest, SysDict } from './model/SysDictDataModel';
+import { DictTypeRequest, SysDictType } from './model/SysDictTypeModel';
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -13,8 +22,8 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-  static findConfigGroupPage(params) {
-    return defHttp.get({ url: '/dict/getConfigGroupPage', params });
+  static findConfigGroupPage(params: DictRequest) {
+    return defHttp.get<PageResult<SysDict>>({ url: '/dict/getConfigGroupPage', params });
   }
 
   /**
@@ -23,8 +32,8 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-  static findConfigPage(params) {
-    return defHttp.get({ url: '/sysConfig/page', params });
+  static findConfigPage(params: SysConfigParam) {
+    return defHttp.get<PageResult<SysConfig>>({ url: '/sysConfig/page', params });
   }
 
   /**
@@ -33,8 +42,8 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 12:05
    */
-  static getConfigDictTypeDetail(params) {
-    return defHttp.get({ url: '/dictType/getConfigDictTypeDetail', params });
+  static getConfigDictTypeDetail(params?: DictTypeRequest) {
+    return defHttp.get<SysDictType>({ url: '/dictType/getConfigDictTypeDetail', params });
   }
 
   /**
@@ -51,7 +60,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 12:05
    */
-  static addConfigType(params) {
+  static addConfigType(params: DictRequest) {
     return defHttp.post({ url: '/dict/add', params }, { isTransformResponse: false });
   }
 
@@ -62,7 +71,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 12:05
    */
-  static deleteConfigType(params) {
+  static deleteConfigType(params: DictRequest) {
     return defHttp.post({ url: '/dict/delete', params }, { isTransformResponse: false });
   }
 
@@ -78,7 +87,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 13:24
    */
-  static addSysConfig(params) {
+  static addSysConfig(params: SysConfigParam) {
     return defHttp.post({ url: '/sysConfig/add', params }, { isTransformResponse: false });
   }
 
@@ -95,7 +104,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 13:24
    */
-  static editSysConfig(params) {
+  static editSysConfig(params: SysConfigParam) {
     return defHttp.post({ url: '/sysConfig/edit', params }, { isTransformResponse: false });
   }
 
@@ -106,7 +115,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/4/9 13:24
    */
-  static deleteSysConfig(params) {
+  static deleteSysConfig(params: SysConfigParam) {
     return defHttp.post({ url: '/sysConfig/delete', params }, { isTransformResponse: false });
   }
 
@@ -118,7 +127,7 @@ export class SysConfigApi {
    * @date 2021/4/9 13:24
    */
   static async getInitConfigFlag() {
-    return await defHttp.get({ url: '/sysConfig/getInitConfigFlag' });
+    return await defHttp.get<boolean>({ url: '/sysConfig/getInitConfigFlag' });
   }
 
   /**
@@ -128,7 +137,7 @@ export class SysConfigApi {
    * @date 2021/4/9 13:24
    */
   static async getInitConfigList() {
-    return await defHttp.get({ url: '/sysConfig/getInitConfigList' });
+    return await defHttp.get<ConfigInitItem[]>({ url: '/sysConfig/getInitConfigList' });
   }
 
   /**
@@ -137,7 +146,7 @@ export class SysConfigApi {
    * @author fengshuonan
    * @date 2021/7/9 11:04
    */
-  static async initConfig(params) {
+  static async initConfig(params: ConfigInitRequest) {
     return await defHttp.post(
       { url: '/sysConfig/initConfig', params },
       { isTransformResponse: false },
