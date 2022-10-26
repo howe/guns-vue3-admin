@@ -116,9 +116,7 @@
           router.addRoute(route as unknown as RouteRecordRaw);
         });
       } else {
-        const str = transformObjToRoute(arr.children);
-        const backMenuList = transformRouteToMenu(str);
-        permissionStore.setBackMenuList(backMenuList);
+        permissionStore.setBackMenuList(userStore.menuList[0].children);
       }
     }
 
