@@ -102,7 +102,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="SysExpandField">
   import { ref, onMounted } from 'vue';
   import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';

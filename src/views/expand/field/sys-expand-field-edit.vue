@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑 -->
-  <common-drawer :width="800" :visible="visible" title="修改应用" @close="updateVisible(false)">
+  <common-drawer :width="800" :visible="visible" title="修改" @close="updateVisible(false)">
     <a-form
       ref="formRef"
       :model="form"
