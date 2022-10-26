@@ -1,6 +1,5 @@
 import { PageResult } from '../../model/baseModel';
 import {
-  ConfigInitItem,
   ConfigInitRequest,
   InitConfigResponse,
   SysConfig,
