@@ -8,9 +8,9 @@
               <h5>首次安装程序</h5>
             </div>
             <a-form :model="form" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
-              <div class="content-row">{{ configList.description }}</div>
+              <div class="content-row">{{ initConfigResponse?.description }}</div>
               <div
-                v-for="(conItem, conIndex) in configList.initConfigGroupList"
+                v-for="(conItem, conIndex) in initConfigResponse?.initConfigGroupList"
                 :key="conIndex + 'con'"
               >
                 <div class="content-row content-item">{{ conItem.title }}</div>
@@ -28,7 +28,7 @@
                       />
                     </a-form-item>
                   </a-col>
-                  <a-col :span="8" style="color: #98999b;">{{ item.configDescription }}</a-col>
+                  <a-col :span="8" style="color: #98999b">{{ item.configDescription }}</a-col>
                 </a-row>
               </div>
               <div class="button-item">
@@ -51,7 +51,10 @@
   import { message } from 'ant-design-vue';
   import { router } from '/@/router';
   import { useUserStore } from '/@/store/modules/user';
-  import { ConfigInitItem, ConfigInitRequest } from '/@/api/system/basedata/model/SysConfigModel';
+  import {
+    ConfigInitRequest,
+    InitConfigResponse,
+  } from '/@/api/system/basedata/model/SysConfigModel';
 
   const userStore = useUserStore();
 
@@ -60,7 +63,7 @@
   // 表单数据
   const form = reactive({});
   // 系统初始化的系统配置列表
-  const configList = ref<ConfigInitItem[]>([]);
+  const initConfigResponse = ref<InitConfigResponse>();
 
   onMounted(async () => {
     // 判断系统是否已经初始化过
@@ -76,8 +79,8 @@
     loading.value = false;
 
     // 获取需要初始化的系统配置
-    configList.value = await SysConfigApi.getInitConfigList();
-    configList.value.initConfigGroupList.forEach((conItem) => {
+    initConfigResponse.value = await SysConfigApi.getInitConfigList();
+    initConfigResponse.value.initConfigGroupList.forEach((conItem) => {
       for (const item of conItem.configInitItemList) {
         // 替换主机名为url的访问地址
         if (item.configCode === 'SYS_SERVER_DEPLOY_HOST') {
@@ -114,14 +117,15 @@
     loading.value = true;
 
     // 获取需要初始化的系统配置
-    configList.value = await SysConfigApi.getInitConfigList();
+    initConfigResponse.value = await SysConfigApi.getInitConfigList();
 
     // 加载中标识关闭
     loading.value = false;
-
-    for (const item of configList.value) {
-      form[item.configCode] = item.configValue;
-    }
+    initConfigResponse.value.initConfigGroupList.forEach((conItem) => {
+      for (const item of conItem.configInitItemList) {
+        form[item.configCode] = item.configValue;
+      }
+    });
   };
 </script>
 

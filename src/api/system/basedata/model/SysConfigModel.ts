@@ -100,3 +100,33 @@ export interface ConfigInitItem {
    */
   configDescription?: string;
 }
+
+export interface InitConfigResponse {
+  /**
+   * 初始化参数界面的整体标题
+   */
+  title?: string;
+  /**
+   * 初始化参数界面的详情信息
+   */
+  description?: string;
+  /**
+   * 具体的参数分组列表，初始化界面可以返回多个分组
+   */
+  initConfigGroupList: InitConfigGroup[];
+}
+
+export interface InitConfigGroup {
+  /**
+   * 参数的分组标题
+   */
+  title?: string;
+  /**
+   * 分组的详情
+   */
+  description?: string;
+  /**
+   * 本分组下，初始化的列表
+   */
+  configInitItemList: ConfigInitItem[];
+}
