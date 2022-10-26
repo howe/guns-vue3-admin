@@ -101,6 +101,7 @@
       const userInfo = await userStore.login({
         password: data.password,
         account: data.account,
+        rememberMe: formData.rememberMe,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
