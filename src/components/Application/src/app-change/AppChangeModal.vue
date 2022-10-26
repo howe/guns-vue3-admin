@@ -53,6 +53,7 @@
   import { transformObjToRoute } from '/@/router/helper/routeHelper';
   import { transformRouteToMenu } from '/@/router/helper/menuHelper';
   import { RouteRecordRaw } from 'vue-router';
+  import { formatMenus } from '/@/utils/common/util';
 
   const props = defineProps({
     visible: { type: Boolean },
@@ -120,10 +121,11 @@
         permissionStore.setBackMenuList(backMenuList);
       }
     }
+
     // 跳转页面
-    if (item.children && item.children.length > 0) {
-      await router.replace(item.children[0].children[0].path);
-    }
+    const { homePath } = formatMenus(item.children);
+    await router.replace(homePath);
+
     // 关闭弹框
     handleClose();
   };

@@ -138,3 +138,77 @@ export function valueIsExistTree(arr: string[], name: string, id: string, childr
   }
   return '';
 }
+
+/**
+ * 格式化菜单数据
+ * @param data 菜单数据
+ * @param parseMenuItem 自定义格式菜单item
+ * @returns {{homePath: String, homeTitle: String, menus: Array}}
+ */
+export function formatMenus(data: any, parseMenuItem: any) {
+  let home: any = null,
+    menus = formatTreeData(data, (d) => {
+      let item = parseMenuItem ? parseMenuItem(d) : Object.assign({}, d);
+      if (!item.children || !item.children.length) {
+        if (!home && item.path && !isUrl(item.path)) {
+          home = {
+            path: item.path,
+            title: item.meta.title,
+          };
+        }
+      } else if (item.children[0].path) {
+        const cp = item.children[0].path;
+        if (!item.redirect) {
+          item.redirect = cp;
+        }
+        if (!item.path) {
+          item.path = cp.substring(0, cp.lastIndexOf('/'));
+        }
+      }
+      if (!item.path) {
+        console.error('菜单的path作为vue循环的key不能为空且要唯一: ', d);
+        return false;
+      }
+      return item;
+    });
+  return {
+    menus: menus,
+    homePath: home ? home.path : null,
+    homeTitle: home ? home.title : null,
+  };
+}
+
+/**
+ * 处理树形数据
+ * @param data 需要处理的数据
+ * @param formatter 处理器
+ * @param childKey children字段名
+ * @returns {[]} 处理后的数据
+ */
+export function formatTreeData(data, formatter, childKey = 'children') {
+  let result: any = [];
+  if (data && data.length) {
+    data.forEach((d) => {
+      let item = formatter(d);
+      if (item !== false) {
+        if (item[childKey]) {
+          item[childKey] = formatTreeData(item[childKey], formatter, childKey);
+        }
+        result.push(item);
+      }
+    });
+  }
+  return result;
+}
+
+/**
+ * 判断是否是外链
+ * @param url
+ * @returns {boolean}
+ */
+export function isUrl(url) {
+  return !!(
+    url &&
+    (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//'))
+  );
+}

@@ -17,7 +17,6 @@ import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
-import { getPermCode } from '/@/api/system/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -25,7 +24,7 @@ import { PageEnum } from '/@/enums/pageEnum';
 interface PermissionState {
   // Permission code list
   // 权限代码列表
-  permCodeList: string[] | number[];
+  permCodeList: string[];
   // Whether the route has been dynamically added
   // 路由是否动态添加
   isDynamicAddedRoute: boolean;
@@ -110,10 +109,6 @@ export const usePermissionStore = defineStore({
       this.permCodeList = [];
       this.backMenuList = [];
       this.lastBuildMenuTime = 0;
-    },
-    async changePermissionCode() {
-      const codeList = await getPermCode();
-      this.setPermCodeList(codeList);
     },
 
     // 构建路由
@@ -229,19 +224,21 @@ export const usePermissionStore = defineStore({
           // 这个功能可能只需要执行一次，实际项目可以自己放在合适的时间
           let routeList: AppRouteRecordRaw[] = [];
           try {
-
-            // await this.changePermissionCode();
+            // 设置权限
+            const authCodeList: string[] = userStore?.userInfo?.authCodes ?? [];
+            this.setPermCodeList(authCodeList);
+            // 设置菜单列表
             if (userStore.menuList && userStore.menuList.length > 0) {
-              this.setNewActiveTabData(userStore.menuList[0]);
-              routeList = userStore.menuList[0]?.children;
+              // this.setNewActiveTabData(userStore.menuList[0]);
+              routeList = userStore?.menuList[0]?.children;
             }
           } catch (error) {
             console.error(error);
           }
-
           // Dynamically introduce components
           // 动态引入组件
           routeList = transformObjToRoute(routeList);
+          
 
           //  Background routing to menu structure
           //  后台路由到菜单结构

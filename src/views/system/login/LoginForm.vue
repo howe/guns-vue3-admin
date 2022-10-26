@@ -38,7 +38,7 @@
 
     <FormItem class="enter-x">
       <!-- 登录 -->
-      <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
+      <Button type="primary" size="large" block @click="handleLogin" :loading="loading" :disabled="loading">
         {{ t('sys.login.loginButton') }}
       </Button>
       <!-- <Button size="large" class="mt-4 enter-x" block @click="handleRegister">
