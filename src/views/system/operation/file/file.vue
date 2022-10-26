@@ -127,12 +127,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { FileApi, FileUploadUrl } from '/@/api/system/operation/FileApi';
   import { computed, reactive, ref } from 'vue';
-  import { BasicTable } from '/@/components/Table';
+  import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
   import FileDetail from './file-detail.vue';
   import { useUserStore } from '/@/store/modules/user';
+  import { FileApi, FileUploadUrl } from '/@/api/system/operation/FileApi';
 
   // 查询条件
   const where = reactive({
@@ -141,7 +141,7 @@
   });
 
   // 表格配置
-  const columns = ref<string[]>([
+  const columns = ref<BasicColumn[]>([
     {
       title: '文件id',
       dataIndex: 'fileId',
@@ -204,8 +204,8 @@
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
 
-  // ref
-  const tableRef = ref(null);
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
 
   const userStore = useUserStore();
 
@@ -233,7 +233,9 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    tableRef.value.reload({ page: 1 });
+    tableRef.value?.reload({
+      page: 1,
+    });
   };
 
   /**
