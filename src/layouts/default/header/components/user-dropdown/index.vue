@@ -14,13 +14,13 @@
         <MenuItem
           key="backend"
           :text="t('后台管理')"
-          v-if="antdvFrontType === 1"
+          v-if="antdvFrontType === 1 && menuType == 3"
           icon="ion:settings-outline"
         />
         <MenuItem
           key="frontend"
           :text="t('前台管理')"
-          v-if="antdvFrontType === 2"
+          v-if="antdvFrontType === 2 && menuType == 3"
           icon="ant-design:appstore-add-outlined"
         />
         <MenuDivider />
@@ -104,6 +104,11 @@
         return systemStore.antdvFrontType;
       })
 
+      // 显示的前后台类型
+      const menuType = computed(() => {
+        return Number(localStorage.getItem('menuType'))
+      })
+
       // 是否显示修改密码弹窗
       const passwordVisible = ref<boolean>(false);
 
@@ -155,6 +160,7 @@
       return {
         prefixCls,
         t,
+        menuType,
         passwordVisible,
         getUserInfo,
         antdvFrontType,

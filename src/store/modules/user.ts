@@ -106,7 +106,8 @@ export const useUserStore = defineStore({
     ): Promise<GetUserInfoModel | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
+        const data: any = await loginApi(loginParams, mode);
+        localStorage.setItem('menuType', data.loginUser.menuType);
         const { token } = data;
 
         // save token
@@ -133,7 +134,7 @@ export const useUserStore = defineStore({
           router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
           permissionStore.setDynamicAddedRoute(true);
         }
-        
+
         goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
       }
       return userInfo;
@@ -142,7 +143,27 @@ export const useUserStore = defineStore({
     async getUserInfoAction(flag: string): Promise<UserInfo | null> {
       const systemStore = useSystemStore();
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo({ menuFrontType: systemStore.antdvFrontType });
+      // 当前菜单类型
+      let antdvMenuFrontType = systemStore.antdvFrontType;
+      // 从后台获取的菜单类型
+      let menuType: any = localStorage.getItem('menuType');
+      if (menuType) {
+        menuType = parseInt(menuType);
+        if (menuType == 1) {
+          // 只有前台
+          antdvMenuFrontType = 1;
+        } else if (menuType == 2) {
+          // 只有后台
+          antdvMenuFrontType = 2;
+        } else if (menuType == 3) {
+          // 都有
+          let sessionFrontType = localStorage.getItem('antdvFrontType');
+          if (sessionFrontType) {
+            antdvMenuFrontType = parseInt(sessionFrontType);
+          }
+        }
+      }
+      const userInfo = await getUserInfo({ menuFrontType: antdvMenuFrontType });
       // 存所有菜单
       // 当前浏览器所在的路径
       const currentPath = window.location.pathname;
@@ -156,7 +177,7 @@ export const useUserStore = defineStore({
             if (valueIsExistTree(pathItem.children, 'path', currentPath, 'children')) {
               currentMentList = pathItem;
             }
-          })
+          });
 
           if (JSON.stringify(currentMentList) == '{}') {
             currentMentList = userInfo.authorities[0];
@@ -196,6 +217,13 @@ export const useUserStore = defineStore({
         } catch {
           console.log('注销Token失败');
         }
+      }
+      if (localStorage.getItem('antdvFrontType')) {
+        localStorage.removeItem('antdvFrontType');
+      }
+
+      if (localStorage.getItem('menuType')) {
+        localStorage.removeItem('menuType');
       }
       this.setToken(undefined);
       this.setSessionTimeout(false);
