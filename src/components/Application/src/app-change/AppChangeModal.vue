@@ -52,6 +52,7 @@
   import { router } from '/@/router';
   import { transformObjToRoute } from '/@/router/helper/routeHelper';
   import { transformRouteToMenu } from '/@/router/helper/menuHelper';
+  import { RouteRecordRaw } from 'vue-router';
 
   const props = defineProps({
     visible: { type: Boolean },
@@ -107,19 +108,17 @@
     if (arr.path != userStore.menuList[0].path) {
       //存入当前菜单列表
       userStore.setMenuList(arr);
-      
-      let str = transformObjToRoute(arr.children);
-      //  后台路由到菜单结构
-      const backMenuList = transformRouteToMenu(str);
-      permissionStore.setBackMenuList(backMenuList);
-      //获取已有的路由列表
-      let routerArr = router.getRoutes();
-      //加入路由列表
-      str.forEach((route) => {
-        if (!routerArr.find((routeItem) => routeItem.path == route.path)) {
-          router.addRoute(route);
-        }
-      });
+      // 如果路由列表中不存在
+      if (!router.getRoutes().find((item) => item.path == arr.children[0].path)) {
+        const routes = await permissionStore.buildRoutesAction();
+        routes.forEach((route) => {
+          router.addRoute(route as unknown as RouteRecordRaw);
+        });
+      } else {
+        const str = transformObjToRoute(arr.children);
+        const backMenuList = transformRouteToMenu(str);
+        permissionStore.setBackMenuList(backMenuList);
+      }
     }
     // 跳转页面
     if (item.children && item.children.length > 0) {
