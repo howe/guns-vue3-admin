@@ -2,6 +2,7 @@ import { PageResult } from '../../model/baseModel';
 import {
   ConfigInitItem,
   ConfigInitRequest,
+  InitConfigResponse,
   SysConfig,
   SysConfigParam,
 } from './model/SysConfigModel';
@@ -137,7 +138,7 @@ export class SysConfigApi {
    * @date 2021/4/9 13:24
    */
   static async getInitConfigList() {
-    return await defHttp.get<ConfigInitItem[]>({ url: '/sysConfig/getInitConfigList' });
+    return await defHttp.get<InitConfigResponse>({ url: '/sysConfig/getInitConfigList' });
   }
 
   /**
