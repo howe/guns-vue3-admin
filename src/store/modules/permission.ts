@@ -229,16 +229,16 @@ export const usePermissionStore = defineStore({
             this.setPermCodeList(authCodeList);
             // 设置菜单列表
             if (userStore.menuList && userStore.menuList.length > 0) {
-              this.setNewActiveTabData(userStore.menuList[0]);
-              routeList = userStore.menuList[0]?.children;
+              // this.setNewActiveTabData(userStore.menuList[0]);
+              routeList = userStore?.menuList[0]?.children;
             }
           } catch (error) {
             console.error(error);
           }
-
           // Dynamically introduce components
           // 动态引入组件
           routeList = transformObjToRoute(routeList);
+          
 
           //  Background routing to menu structure
           //  后台路由到菜单结构
