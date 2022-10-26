@@ -50,8 +50,6 @@
   import { useUserStore } from '/@/store/modules/user';
   import { usePermissionStore } from '/@/store/modules/permission';
   import { router } from '/@/router';
-  import { transformObjToRoute } from '/@/router/helper/routeHelper';
-  import { transformRouteToMenu } from '/@/router/helper/menuHelper';
   import { RouteRecordRaw } from 'vue-router';
   import { formatMenus } from '/@/utils/common/util';
 
