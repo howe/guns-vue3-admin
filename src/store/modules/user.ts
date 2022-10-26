@@ -16,7 +16,7 @@ import { useSystemStore } from '/@/store/modules/system';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
-import { setMenu, formatMenus } from '/@/utils/common/util';
+import { setMenu, formatMenus, valueIsExistTree } from '/@/utils/common/util';
 import { h } from 'vue';
 
 interface UserState {
@@ -144,9 +144,22 @@ export const useUserStore = defineStore({
       if (!this.getToken) return null;
       const userInfo = await getUserInfo({ menuFrontType: systemStore.antdvFrontType });
       // 存所有菜单
+      // 当前浏览器所在的路径
+      const currentPath = window.location.pathname;
+      // 当前菜单列表
+      let currentMentList: any = {};
       if (userInfo?.authorities) {
         this.setAllMenuList(userInfo.authorities);
-        this.setMenuList(this.allMenuList[0]);
+        // 获取当前菜单列表
+        if (userInfo.authorities && userInfo.authorities.length) {
+          userInfo.authorities.forEach((pathItem) => {
+            if (valueIsExistTree(pathItem.children, 'path', currentPath, 'children')) {
+              currentMentList = pathItem;
+            }
+          })
+        }
+        // 设置菜单列表
+        this.setMenuList(currentMentList);
         // 获取跳转的首页路径
         const { homePath } = formatMenus(userInfo?.authorities[0]?.children, '');
         if (homePath) {
