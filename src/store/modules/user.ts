@@ -16,7 +16,7 @@ import { useSystemStore } from '/@/store/modules/system';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
-import { setMenu } from '/@/utils/common/util';
+import { setMenu, formatMenus } from '/@/utils/common/util';
 import { h } from 'vue';
 
 interface UserState {
@@ -147,8 +147,10 @@ export const useUserStore = defineStore({
       if (userInfo?.authorities) {
         this.setAllMenuList(userInfo.authorities);
         this.setMenuList(this.allMenuList[0]);
-        if (userInfo?.authorities[0]?.children[0]?.children[0]?.path) {
-          userInfo.homePath = userInfo?.authorities[0]?.children[0]?.children[0]?.path;
+        // 获取跳转的首页路径
+        const { homePath } = formatMenus(userInfo?.authorities[0]?.children, '');
+        if (homePath) {
+          userInfo.homePath = homePath;
         }
       }
       const { roles = [] } = userInfo;
