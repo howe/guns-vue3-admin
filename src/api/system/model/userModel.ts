@@ -15,7 +15,8 @@ export interface userInfoParams {
 
 export interface RoleInfo {
   roleName: string;
-  value: string;
+  roleId: string;
+  roleCode: string;
 }
 
 /**

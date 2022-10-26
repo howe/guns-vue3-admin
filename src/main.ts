@@ -19,6 +19,7 @@ import { isDevMode } from './utils/env';
 import * as antIcons from '@ant-design/icons-vue';
 import Antd from 'ant-design-vue'; //引入组件库
 import 'ant-design-vue/dist/antd.less';
+import permission from '/@/utils/permission';
 
 if (isDevMode()) {
   import('ant-design-vue/es/style/index.less');
@@ -64,6 +65,7 @@ async function bootstrap() {
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
   app.use(Antd);
+  app.use(permission);
 
   // 注册图标组件到全局
   Object.keys(antIcons).forEach((key) => {
