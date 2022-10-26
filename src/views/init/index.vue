@@ -33,7 +33,7 @@
               </div>
               <div class="button-item">
                 <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                  <a-button type="primary" @click="onSubmit">提交</a-button>
+                  <a-button type="primary" @click="onSubmit" :disabled="buttunLoading">提交</a-button>
                   <a-button @click="onReset" style="margin-left: 10px">重置</a-button>
                 </a-form-item>
               </div>
@@ -60,6 +60,8 @@
 
   // 页面加载中标识
   const loading = ref<boolean>(true);
+  // 提交按钮状态
+  const buttunLoading = ref<boolean>(false);
   // 表单数据
   const form = reactive({});
   // 系统初始化的系统配置列表
@@ -101,11 +103,14 @@
   });
 
   // 提交初始化配置
-  const onSubmit = async () => {
+  const onSubmit = () => {
+    buttunLoading.value = true;
     let param: ConfigInitRequest = {};
     param.sysConfigs = form;
-    let result = await SysConfigApi.initConfig(param);
-    message.success(result.message);
+    SysConfigApi.initConfig(param).then(result => {
+      message.success(result.message);
+    }).finally(() => buttunLoading.value = false);
+    
 
     // 跳转到首页
     router.push(userStore?.userInfo?.homePath ?? '/');
