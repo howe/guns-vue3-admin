@@ -4,9 +4,9 @@
     <a-card :bordered="false" :body-style="{ padding: '20px' }">
       <div class="ele-cell workplace-user-card">
         <div class="ele-cell-content ele-cell">
-          <a-avatar :size="68" :src="loginUser.avatar" />
+          <a-avatar :size="68" :src="loginUser?.avatar" />
           <div class="ele-cell-content">
-            <h4 class="ele-elip">{{ loginUser.username }}，欢迎登录！</h4>
+            <h4 class="ele-elip">{{ loginUser?.username }}，欢迎登录！</h4>
           </div>
         </div>
         <div class="workplace-count-group">
@@ -22,7 +22,7 @@
         <a-col :lg="3" :md="6" :sm="12" :xs="12" v-for="(item, index) in recentMenus" :key="index">
           <a-card hoverable :body-style="{ padding: 0 }">
             <router-link :to="item.antdvRouter" class="app-link-block">
-              <component class="app-link-icon" :is="$antIcons[item.antdvIcon]" />
+              <component class="app-link-icon" :is="$antIcons[item.antdvIcon]" v-show="item.antdvIcon"/>
               <div class="app-link-title">{{ item.menuName }}</div>
             </router-link>
           </a-card>
@@ -138,7 +138,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="WorkPlace">
   import { computed, onMounted, reactive, ref } from 'vue';
   import { HomeApi } from '/@/api/system/dashboard/HomeApi';
   import { useUserStore } from '/@/store/modules/user';
