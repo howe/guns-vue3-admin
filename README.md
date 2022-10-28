@@ -1,6 +1,6 @@
 ## 简介
 
-Guns 7.3.0，前端采用Vue Vben Admin。使用了最新的`vue3` + `vite2` + `TypeScript`等主流技术开发，开箱即用的前端解决方案，也可用于学习参考。
+Guns 7.3.0，前端采用Vue Vben Admin。使用了最新的`vue3` + `vite2` + `TypeScript`等主流技术开发，开箱即用的整套架构，也可用于学习参考。
 
 ## 文档
 
@@ -40,6 +40,8 @@ Guns 7.3.0，前端采用Vue Vben Admin。使用了最新的`vue3` + `vite2` + `
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
 
 ## 安装使用
+
+请先安装**Node 16**和**Yarn**，安装过程略过。
 
 - 安装依赖
 
