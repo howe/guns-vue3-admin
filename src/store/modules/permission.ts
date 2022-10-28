@@ -98,7 +98,7 @@ export const usePermissionStore = defineStore({
     setDynamicAddedRoute(added: boolean) {
       this.isDynamicAddedRoute = added;
     },
-    
+
     // 当前激活tab的数据
     setNewActiveTabData(data: any) {
       this.newActiveTabData = data;
@@ -238,7 +238,6 @@ export const usePermissionStore = defineStore({
           // Dynamically introduce components
           // 动态引入组件
           routeList = transformObjToRoute(routeList);
-          
 
           //  Background routing to menu structure
           //  后台路由到菜单结构
