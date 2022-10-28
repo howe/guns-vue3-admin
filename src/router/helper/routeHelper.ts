@@ -5,6 +5,7 @@ import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { isUrl } from '/@/utils/is';
 
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/system/iframe/FrameBlank.vue');
@@ -21,8 +22,13 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
   dynamicViewsModules = dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}');
   if (!routes) return;
   routes.forEach((item) => {
-    if (!item.component && item.meta?.frameSrc) {
+    // if (!item.component && item.meta?.frameSrc) {
+    //   item.component = 'IFRAME';
+    // }
+    if (item.path && item.component && isUrl(item.component)) {
+      item.meta.frameSrc = item.component;
       item.component = 'IFRAME';
+      item.meta.title = item.name;
     }
     const { component, name } = item;
     const { children } = item;
