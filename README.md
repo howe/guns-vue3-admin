@@ -1,12 +1,22 @@
 ## 简介
 
-Guns 7.3.0，前端采用Vue Vben Admin。
-
-Vue Vben Admin是一个免费开源的中后台模版。使用了最新的`vue3`,`vite2`,`TypeScript`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
+Guns 7.3.0，前端采用Vue Vben Admin。使用了最新的`vue3` + `vite2` + `TypeScript`等主流技术开发，开箱即用的前端解决方案，也可用于学习参考。
 
 ## 文档
 
-[前端文档地址](https://vvbin.cn/doc-next/)
+[Guns文档地址](https://javaguns.com/doc)
+
+[Vben前端文档地址](https://vvbin.cn/doc-next/)
+
+## 运行效果
+
+![](.README_images/4e63346d.png)
+
+![](.README_images/223a7ade.png)
+
+![](.README_images/9f05f0d3.png)
+
+![](.README_images/49e229cb.png)
 
 ## 特性
 
