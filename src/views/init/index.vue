@@ -114,8 +114,9 @@
         message.success(result.message);
         // 跳转到首页
         router.push(userStore?.userInfo?.homePath ?? '/');
+        buttunLoading.value = false
       })
-      .finally(() => (buttunLoading.value = false));
+      .finally();
   };
 
   // 重置数据
