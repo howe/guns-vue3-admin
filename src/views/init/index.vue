@@ -74,10 +74,10 @@
     let initConfigFlag = await SysConfigApi.getInitConfigFlag();
 
     // 如果已经初始化过，则跳转到首页
-    if (initConfigFlag) {
-      router.push(userStore?.userInfo?.homePath ?? '/');
-      return;
-    }
+    // if (initConfigFlag) {
+    //   router.push(userStore?.userInfo?.homePath ?? '/');
+    //   return;
+    // }
 
     // 关闭加载中
     loading.value = false;
@@ -114,7 +114,6 @@
         message.success(result.message);
         // 跳转到首页
         router.push(userStore?.userInfo?.homePath ?? '/');
-        buttunLoading.value = false
       })
       .finally();
   };
