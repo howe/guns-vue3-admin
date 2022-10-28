@@ -33,7 +33,9 @@
               </div>
               <div class="button-item">
                 <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                  <a-button type="primary" @click="onSubmit" :disabled="buttunLoading">提交</a-button>
+                  <a-button type="primary" @click="onSubmit" :disabled="buttunLoading"
+                    >提交</a-button
+                  >
                   <a-button @click="onReset" style="margin-left: 10px">重置</a-button>
                 </a-form-item>
               </div>
@@ -107,13 +109,14 @@
     buttunLoading.value = true;
     let param: ConfigInitRequest = {};
     param.sysConfigs = form;
-    SysConfigApi.initConfig(param).then(result => {
-      message.success(result.message);
-    }).finally(() => buttunLoading.value = false);
-    
-
-    // 跳转到首页
-    router.push(userStore?.userInfo?.homePath ?? '/');
+    SysConfigApi.initConfig(param)
+      .then((result) => {
+        message.success(result.message);
+        // 跳转到首页
+        router.push(userStore?.userInfo?.homePath ?? '/');
+        buttunLoading.value = false
+      })
+      .finally();
   };
 
   // 重置数据
