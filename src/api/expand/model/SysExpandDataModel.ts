@@ -37,9 +37,9 @@ export interface SysExpandData extends BaseResponse {
   /**
    * 拓展业务具体数据
    */
-  expandData?: string;
+  expandData: any;
   expandInfo: SysExpand;
-  fieldInfoList?: SysExpandField[];
+  fieldInfoList: SysExpandField[];
 }
 
 export interface ExpandDataInfo {
