@@ -1,3 +1,5 @@
+import { PageResult } from '../model/baseModel';
+import { SysExpandData, SysExpandDataRequest } from './model/SysExpandDataModel';
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -13,7 +15,7 @@ export class SysExpandDataApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static delete(params) {
+  static delete(params: SysExpandDataRequest) {
     return defHttp.post({ url: '/sysExpandData/delete', params }, { isTransformResponse: false });
   }
 
@@ -23,8 +25,8 @@ export class SysExpandDataApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static detail(params) {
-    return defHttp.get({ url: '/sysExpandData/detail', params });
+  static detail(params: SysExpandDataRequest) {
+    return defHttp.get<SysExpandData>({ url: '/sysExpandData/detail', params });
   }
 
   /**
@@ -33,7 +35,7 @@ export class SysExpandDataApi {
    * @author fengshuonan
    * @date 2022/5/8 20:36
    */
-  static findPage(params) {
-    return defHttp.get({ url: '/sysExpandData/page', params });
+  static findPage(params: SysExpandDataRequest) {
+    return defHttp.get<PageResult<SysExpandData>>({ url: '/sysExpandData/page', params });
   }
 }

@@ -1,3 +1,7 @@
+import { PageResult } from '../model/baseModel';
+import { SysExpandData } from './model/SysExpandDataModel';
+import { ExpandFieldInfo } from './model/SysExpandFieldModel';
+import { SysExpand, SysExpandRequest } from './model/SysExpandModel';
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -13,8 +17,8 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/5/8 20:36
    */
-  static findPage(params) {
-    return defHttp.get({ url: '/sysExpand/page', params });
+  static findPage(params: SysExpandRequest) {
+    return defHttp.get<PageResult<SysExpand>>({ url: '/sysExpand/page', params });
   }
 
   /**
@@ -23,7 +27,7 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static add(params) {
+  static add(params: SysExpandRequest) {
     return defHttp.post({ url: '/sysExpand/add', params }, { isTransformResponse: false });
   }
 
@@ -33,7 +37,7 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static edit(params) {
+  static edit(params: SysExpandRequest) {
     return defHttp.post({ url: '/sysExpand/edit', params }, { isTransformResponse: false });
   }
 
@@ -43,7 +47,7 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static delete(params) {
+  static delete(params: SysExpandRequest) {
     return defHttp.post({ url: '/sysExpand/delete', params }, { isTransformResponse: false });
   }
 
@@ -53,8 +57,8 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static detail(params) {
-    return defHttp.get({ url: '/sysExpand/detail', params });
+  static detail(params: SysExpandRequest) {
+    return defHttp.get<SysExpand>({ url: '/sysExpand/detail', params });
   }
 
   /**
@@ -63,7 +67,7 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static updateStatus(params) {
+  static updateStatus(params: SysExpandRequest) {
     return defHttp.post({ url: '/sysExpand/updateStatus', params }, { isTransformResponse: false });
   }
 
@@ -73,8 +77,8 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static list(params) {
-    return defHttp.get({ url: '/sysExpand/list', params });
+  static list(params?: SysExpandRequest) {
+    return defHttp.get<SysExpand[]>({ url: '/sysExpand/list', params });
   }
 
   /**
@@ -83,8 +87,8 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static getByExpandCode(params) {
-    return defHttp.get({ url: '/sysExpand/getByExpandCode', params });
+  static getByExpandCode(params: SysExpandRequest) {
+    return defHttp.get<SysExpandData>({ url: '/sysExpand/getByExpandCode', params });
   }
 
   /**
@@ -93,7 +97,7 @@ export class SysExpandApi {
    * @author fengshuonan
    * @date 2022/03/30 09:53
    */
-  static getListFields(params) {
-    return defHttp.get({ url: '/sysExpand/getListFields', params });
+  static getListFields(params: SysExpandRequest) {
+    return defHttp.get<ExpandFieldInfo[]>({ url: '/sysExpand/getListFields', params });
   }
 }

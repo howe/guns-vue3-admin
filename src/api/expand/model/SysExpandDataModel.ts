@@ -25,7 +25,7 @@ export interface SysExpandData extends BaseResponse {
   /**
    * 主键id
    */
-  expandDataId?: string;
+  expandDataId: string;
   /**
    * 拓展业务id
    */
@@ -38,7 +38,7 @@ export interface SysExpandData extends BaseResponse {
    * 拓展业务具体数据
    */
   expandData?: string;
-  expandInfo?: SysExpand;
+  expandInfo: SysExpand;
   fieldInfoList?: SysExpandField[];
 }
 

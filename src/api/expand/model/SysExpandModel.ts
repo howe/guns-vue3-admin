@@ -39,7 +39,7 @@ export interface SysExpand extends BaseResponse {
   /**
    * 主键id
    */
-  expandId?: string;
+  expandId: string;
   /**
    * 拓展业务名称
    */

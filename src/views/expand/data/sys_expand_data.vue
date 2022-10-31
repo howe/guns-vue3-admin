@@ -72,14 +72,11 @@
     </a-row>
 
     <!-- 编辑弹窗 -->
-    <sys-expand-data-detail
-      v-model:visible="showEdit"
-      :data="current"
-    />
+    <sys-expand-data-detail v-model:visible="showEdit" :data="current" />
   </div>
 </template>
 
-<script lang="ts" setup name="SysExpandData">
+<script name="SysExpandData" lang="ts" setup>
   import { ref, onMounted } from 'vue';
   import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
   import { message } from 'ant-design-vue';
@@ -88,13 +85,14 @@
   import SysExpandDataDetail from './sys-expand-data-detail.vue';
   import { SysExpandDataApi } from '/@/api/expand/SysExpandDataApi';
   import { SysExpandData, SysExpandDataRequest } from '/@/api/expand/model/SysExpandDataModel';
+  import { SysExpand } from '/@/api/expand/model/SysExpandModel';
 
   // 查询条件
   const { where } = useSearch<SysExpandDataRequest>({});
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
   // 当前行数据
-  const current = ref<any>(null);
+  const current = ref<SysExpandData | null>(null);
   // 是否显示编辑弹框
   const showEdit = ref<boolean>(false);
 
@@ -117,7 +115,7 @@
   ]);
 
   // 左侧业务列表
-  const businessList = ref<string[]>([]);
+  const businessList = ref<SysExpand[]>([]);
   // 当前选中的左侧应用
   const selectedBusiness = ref<string[]>([]);
 
