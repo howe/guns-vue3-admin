@@ -32,7 +32,7 @@
       </user-form>
 
       <!-- 角色分配 -->
-      <user-role v-if="activeKey == '2'" :data="data" ref="userRole"></user-role>
+      <user-role v-if="activeKey == '2'" :data="data" ref="userRole" />
     </common-drawer>
 
     <!-- 新增 -->

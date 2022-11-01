@@ -157,7 +157,7 @@ export const useUserStore = defineStore({
           antdvMenuFrontType = 2;
         } else if (menuType == 3) {
           // 都有
-          let sessionFrontType = localStorage.getItem('antdvFrontType');
+          const sessionFrontType = localStorage.getItem('antdvFrontType');
           if (sessionFrontType) {
             antdvMenuFrontType = parseInt(sessionFrontType);
           }

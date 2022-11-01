@@ -148,7 +148,7 @@ export function valueIsExistTree(arr: string[], name: string, id: string, childr
 export function formatMenus(data: any, parseMenuItem: any) {
   let home: any = null,
     menus = formatTreeData(data, (d) => {
-      let item = parseMenuItem ? parseMenuItem(d) : Object.assign({}, d);
+      const item = parseMenuItem ? parseMenuItem(d) : Object.assign({}, d);
       if (!item.children || !item.children.length) {
         if (!home && item.path && !isUrl(item.path)) {
           home = {
@@ -186,10 +186,10 @@ export function formatMenus(data: any, parseMenuItem: any) {
  * @returns {[]} 处理后的数据
  */
 export function formatTreeData(data, formatter, childKey = 'children') {
-  let result: any = [];
+  const result: any = [];
   if (data && data.length) {
     data.forEach((d) => {
-      let item = formatter(d);
+      const item = formatter(d);
       if (item !== false) {
         if (item[childKey]) {
           item[childKey] = formatTreeData(item[childKey], formatter, childKey);

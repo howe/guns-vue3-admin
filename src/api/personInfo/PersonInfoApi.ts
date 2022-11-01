@@ -1,4 +1,6 @@
 import { defHttp } from '/@/utils/http/axios';
+import { SysUserDTO, SysUserRequest } from '../system/user/model/UserModel';
+import { UpdatePasswordParam } from './model/PersonInfoModel';
 
 /**
  * 个人信息api
@@ -14,7 +16,7 @@ export class PersonInfoApi {
    * @date 2021/4/1 15:04
    */
   static getCurrentLoginUserInfo() {
-    return defHttp.get({ url: '/sysUser/currentUserInfo' });
+    return defHttp.get<SysUserDTO>({ url: '/sysUser/currentUserInfo' });
   }
 
   /**
@@ -30,7 +32,7 @@ export class PersonInfoApi {
    * @author fengshuonan
    * @date 2021/4/13 16:16
    */
-  static updateUserInfo(params) {
+  static updateUserInfo(params: SysUserRequest) {
     return defHttp.post({ url: '/sysUser/updateInfo', params }, { isTransformResponse: false });
   }
 
@@ -42,7 +44,7 @@ export class PersonInfoApi {
    * @author fengshuonan
    * @date 2021/4/1 15:09
    */
-  static updatePassword(params) {
+  static updatePassword(params: UpdatePasswordParam) {
     return defHttp.post({ url: '/sysUser/updatePassword', params }, { isTransformResponse: false });
   }
 

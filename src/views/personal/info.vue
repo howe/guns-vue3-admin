@@ -5,10 +5,10 @@
         <a-card :bordered="false" class="table-height">
           <div class="ele-text-center">
             <div class="user-info-avatar-group" @click="showCropper = true">
-              <a-avatar :size="110" :src="loginUser.avatar" />
+              <a-avatar :size="110" :src="loginUser?.avatar" />
               <upload-outlined class="user-info-avatar-icon" />
             </div>
-            <h1>{{ loginUser.realName }}</h1>
+            <h1>{{ loginUser?.realName }}</h1>
           </div>
           <div class="user-info-list">
             <div class="ele-cell">
@@ -39,41 +39,41 @@
             <a-tab-pane tab="基本信息" key="info">
               <a-form
                 ref="formRef"
-                :model="state.form"
+                :model="form"
                 :rules="rules"
                 :label-col="{ md: { span: 6 }, sm: { span: 24 } }"
                 :wrapper-col="{ md: { span: 18 }, sm: { span: 24 } }"
               >
                 <a-form-item label="账号:" name="account">
                   <a-input
-                    v-model:value="state.form.account"
+                    v-model:value="form.account"
                     placeholder="请输入账号"
                     allow-clear
                     disabled
                   />
                 </a-form-item>
                 <a-form-item label="性别:" name="sex">
-                  <a-select v-model:value="state.form.sex" placeholder="请选择性别" allow-clear>
+                  <a-select v-model:value="form.sex" placeholder="请选择性别" allow-clear>
                     <a-select-option value="M">男</a-select-option>
                     <a-select-option value="F">女</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item label="邮箱:" name="email">
-                  <a-input v-model:value="state.form.email" placeholder="请输入邮箱" allow-clear />
+                  <a-input v-model:value="form.email" placeholder="请输入邮箱" allow-clear />
                 </a-form-item>
                 <a-form-item label="姓名:" name="realName">
-                  <a-input v-model:value="state.form.realName" placeholder="请输入个人简介" />
+                  <a-input v-model:value="form.realName" placeholder="请输入个人简介" />
                 </a-form-item>
                 <a-form-item label="生日:" name="birthday">
                   <a-date-picker
-                    v-model:value="state.form.birthday"
+                    v-model:value="form.birthday"
                     format="YYYY-MM-DD"
                     valueFormat="YYYY-MM-DD"
                     style="width: 399px"
                   />
                 </a-form-item>
                 <a-form-item label="电话:" name="phone">
-                  <a-input v-model:value="state.form.phone" placeholder="请输入电话" allow-clear />
+                  <a-input v-model:value="form.phone" placeholder="请输入电话" allow-clear />
                 </a-form-item>
                 <a-form-item :wrapper-col="{ md: { offset: 6 } }">
                   <a-button type="primary" @click="save" :loading="loading">
@@ -143,7 +143,7 @@
     <!-- 头像裁剪弹窗 -->
     <cropper-modal
       v-model:visible="showCropper"
-      :src="loginUser.avatar"
+      :src="loginUser?.avatar"
       :to-blob="true"
       @done="onCrop"
     />
@@ -152,24 +152,46 @@
 
 <script lang="ts" setup>
   import { computed, onMounted, reactive, ref } from 'vue';
+  import { message } from 'ant-design-vue';
+  import type { FormInstance, Rule } from 'ant-design-vue/es/form';
+  import useFormData from '/@/utils/common/use-form-data';
+  import { emailReg } from '/@/utils/common/validate';
   import { PersonInfoApi } from '/@/api/personInfo/PersonInfoApi';
   import { FileApi } from '/@/api/system/operation/FileApi';
   import { useUserStore } from '/@/store/modules/user';
   import CropperModal from '/@/components/PictureCropper/index.vue';
-  import { message } from 'ant-design-vue';
+  import { SysUserRequest } from '/@/api/system/user/model/UserModel';
 
   // tab页选中
   const active = ref<string>('info');
 
+  // 表单实例
+  const formRef = ref<FormInstance | null>(null);
+
   // 表单数据
-  const state = reactive({
-    form: {},
+  const { form, assignFormFields } = useFormData<SysUserRequest>({
+    userId: undefined,
+    account: undefined,
+    sex: undefined,
+    email: undefined,
+    realName: undefined,
+    birthday: undefined,
+    phone: undefined,
   });
+
   // 表单验证规则
-  const rules = reactive({
+  const rules = reactive<Record<string, Rule[]>>({
     realName: [{ required: true, message: '请输入姓名', type: 'string', trigger: 'blur' }],
     sex: [{ required: true, message: '请选择性别', type: 'string', trigger: 'blur' }],
-    email: [{ required: true, message: '请输入邮箱', type: 'string', trigger: 'blur' }],
+    email: [
+      { required: true, message: '请输入邮箱', type: 'string', trigger: 'blur' },
+      {
+        pattern: emailReg,
+        message: '邮箱格式不正确',
+        type: 'string',
+        trigger: 'blur',
+      },
+    ],
   });
 
   // 保存按钮loading
@@ -177,16 +199,14 @@
   // 是否显示裁剪弹窗
   const showCropper = ref<boolean>(false);
 
-  // ref
-  const formRef = ref(null);
-
   onMounted(async () => {
-    state.form = await PersonInfoApi.getCurrentLoginUserInfo();
+    let result = await PersonInfoApi.getCurrentLoginUserInfo();
+    assignFormFields(result);
   });
 
+  const userStore = useUserStore();
   // 用户信息
   const loginUser = computed(() => {
-    const userStore = useUserStore();
     return userStore.userInfo;
   });
 
@@ -196,15 +216,22 @@
    * @author fengshuonan
    * @date 2021/4/13 17:50
    */
-  const save = async () => {
-    // 校验表单
-    await formRef.value.validate();
-
-    // 更新个人信息
-    const result = await PersonInfoApi.updateUserInfo(state.form);
-
-    // 提示更新成功
-    message.success(result.message);
+  const save = () => {
+    if (!formRef.value) {
+      return;
+    }
+    formRef.value
+      .validate()
+      .then(async () => {
+        loading.value = true;
+        // 更新个人信息
+        const result = await PersonInfoApi.updateUserInfo(form);
+        updateLoginUser(form);
+        loading.value = false;
+        // 提示更新成功
+        message.success(result.message);
+      })
+      .catch(() => {});
   };
 
   /**
@@ -218,7 +245,8 @@
     let reader = new window.FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
-      loginUser.value.avatar = reader.result;
+      // loginUser.value.avatar = reader.result;
+      updateLoginUser({ avatar: reader.result });
     };
 
     // 关闭剪裁窗口
@@ -233,6 +261,18 @@
     const uploadResult = await FileApi.commonUpload(formData);
     const result = await PersonInfoApi.updateAvatar({ avatar: uploadResult.data.fileId });
     message.success(result.message);
+  };
+
+  /**
+   * 修改登录用户信息
+   * @param obj
+   */
+  const updateLoginUser = (obj: Record<string, any>) => {
+    let target = { ...loginUser.value };
+    Object.keys(target).forEach((key) => {
+      target[key] = obj[key];
+    });
+    userStore.setUserInfo(target);
   };
 </script>
 
