@@ -122,8 +122,8 @@
 
   watch(
     () => props.visible,
-    () => {
-      if (!props.visible) {
+    (visible) => {
+      if (!visible) {
         resetFormFields();
         formRef.value?.clearValidate();
       }
