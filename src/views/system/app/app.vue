@@ -115,7 +115,7 @@
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
   // 当前行数据
-  const current = ref<any>(null);
+  const current = ref<SysApp | null>(null);
   // 是否显示编辑弹框
   const showEdit = ref<boolean>(false);
   // 是否显示新增弹框

@@ -20,7 +20,7 @@
             <template #toolbar>
               <div class="table-toolbar">
                 <a-space size="middle">
-                  <a-button type="primary" @click="openEdit()">
+                  <a-button :disabled="!current" type="primary" @click="openEdit()">
                     <plus-outlined />
                     <span>新建</span>
                   </a-button>
@@ -48,16 +48,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { BasicTable, useTable } from '/@/components/Table';
+  import { createVNode, ref, nextTick } from 'vue';
+  import { BasicColumn, BasicTable, TableActionType, useTable } from '/@/components/Table';
   import { message, Modal } from 'ant-design-vue';
-  import { createVNode, onMounted, reactive, ref, nextTick } from 'vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import { SysDictTypeApi } from '/@/api/system/basedata/SysDictTypeApi';
   import DictData from './dict-data.vue';
   import DictEdit from './dict-edit.vue';
+  import { SysDictType } from '/@/api/system/basedata/model/SysDictTypeModel';
 
   // 左侧表格配置
-  const columns = ref<string[]>([
+  const columns = ref<BasicColumn[]>([
     {
       title: '类型',
       dataIndex: 'dictTypeName',
@@ -68,32 +69,32 @@
     },
   ]);
 
-  // 当前行数据
-  const current = ref<any>(null);
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
 
+  // 当前行数据
+  const current = ref<SysDictType | null>(null);
+  // 编辑回显数据
+  const editData = ref<SysDictType | null>(null);
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
 
-  // 编辑回显数据
-  const editData = ref<any>(null);
-
-  // ref
-  const tableRef = ref(null);
-  const dictDataRef = ref(null);
+  const dictDataRef = ref();
 
   // 接口设置
   const [registerTable, {}] = useTable({
     afterFetch: (data) => {
       if (data && data.length > 0) {
-        tableRef.value.setSelectedRowKeys([data[0].dictTypeId]);
+        tableRef.value?.setSelectedRowKeys([data[0].dictTypeId]);
         current.value = data[0];
       }
     },
   });
 
   //左侧配置类型选择改变
-  const onSelectChange = (val: any, row: any) => {
-    if (row && row.length > 0) current.value = row[0];
+  const onSelectChange = (selectedRowKeys: string[] | number[], selectedRows: SysDictType[]) => {
+    tableRef.value?.setSelectedRowKeys(selectedRowKeys);
+    if (selectedRows && selectedRows.length > 0) current.value = selectedRows[0];
   };
 
   /**
@@ -103,7 +104,9 @@
    * @date 2021/4/9 11:49
    */
   const reload = () => {
-    tableRef.value.reload();
+    tableRef.value?.reload({
+      page: 1,
+    });
   };
 
   /**
@@ -112,8 +115,7 @@
    * @author fengshuonan
    * @date 2021/4/9 11:49
    */
-  const openEdit = (row) => {
-    editData.value = row;
+  const openEdit = () => {
     showEdit.value = true;
   };
 
@@ -134,7 +136,7 @@
       icon: createVNode(ExclamationCircleOutlined),
       maskClosable: true,
       onOk: async () => {
-        let result = await SysDictTypeApi.del({ dictTypeId: current.value.dictTypeId });
+        let result = await SysDictTypeApi.del({ dictTypeId: current.value?.dictTypeId });
         message.success(result.message);
         reload();
       },

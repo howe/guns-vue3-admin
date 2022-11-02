@@ -35,7 +35,7 @@
         <template #toolbar>
           <div class="table-toolbar">
             <a-space>
-              <a-button type="primary" @click="openEdit()">
+              <a-button type="primary" @click="openAdd()">
                 <template #icon>
                   <plus-outlined />
                 </template>
@@ -70,32 +70,32 @@
       :dict-type-code="dictTypeCode"
       :data="current"
       @done="reload"
-      v-if="showEdit"
     />
+    <!-- 新增弹窗 -->
+    <dict-data-add v-model:visible="showAdd" :dict-type-code="dictTypeCode" @done="reload" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, watch } from 'vue';
-  import { BasicTable } from '/@/components/Table';
-  import { message } from 'ant-design-vue';
+  import { ref, watch } from 'vue';
+  import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
+  import { message } from 'ant-design-vue/es';
+  import useSearch from '/@/utils/common/use-search';
   import DictDataEdit from './dict-data-edit.vue';
+  import DictDataAdd from './dict-data-add.vue';
   import { SysDictDataApi } from '/@/api/system/basedata/SysDictDataApi';
+  import { DictRequest, SysDict } from '/@/api/system/basedata/model/SysDictDataModel';
 
   const props = defineProps<{
     // 配置组编码
-    dictTypeCode: String;
+    dictTypeCode: string;
   }>();
 
   // 查询条件
-  const where = reactive({
-    dictName: '',
-    dictCode: '',
-    dictTypeCode: props.dictTypeCode,
-  });
+  const { where, resetWhereFields } = useSearch<DictRequest>({});
 
   // 表格配置
-  const columns = ref<string[]>([
+  const columns = ref<BasicColumn[]>([
     {
       title: '名称',
       dataIndex: 'dictName',
@@ -117,15 +117,14 @@
 
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
-
   // 当前行数据
-  const current = ref<any>(null);
-
+  const current = ref<SysDict | null>(null);
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
-
-  // ref
-  const tableRef = ref(null);
+  // 是否显示新增编辑弹框
+  const showAdd = ref<boolean>(false);
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
 
   /**
    * 点击查询
@@ -134,7 +133,7 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    tableRef.value.reload({ page: 1 });
+    tableRef.value?.reload({ page: 1 });
   };
 
   /**
@@ -143,8 +142,7 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.dictName = '';
-    where.dictCode = '';
+    resetWhereFields();
     reload();
   };
 
@@ -154,7 +152,7 @@
    * @author fengshuonan
    * @date 2021/4/2 17:03
    */
-  const remove = async (row: any) => {
+  const remove = async (row: SysDict) => {
     const result = await SysDictDataApi.del({ dictId: row.dictId });
     message.success(result.message);
     reload();
@@ -166,11 +164,22 @@
    * @author fengshuonan
    * @date 2021/4/2 17:03
    */
-  const openEdit = (row: any) => {
+  const openEdit = (row: SysDict) => {
     current.value = row;
     showEdit.value = true;
   };
 
+  /**
+   * 打开新增弹窗
+   *
+   * @author yxx
+   * @date 2022/04/04 12:24
+   */
+  const openAdd = () => {
+    showAdd.value = true;
+  };
+
+  // 监听字典类型变化
   watch(
     () => props.dictTypeCode,
     (val) => {

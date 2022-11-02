@@ -2,6 +2,8 @@
  * @Author: nxy
  * @Date: 2022-10-10 10:01:58
  */
+import { PageResult } from '../../model/baseModel';
+import { DictRequest, SysDict } from './model/SysDictDataModel';
 import { defHttp } from '/@/utils/http/axios';
 
 /**
@@ -17,8 +19,8 @@ export class SysDictDataApi {
    * @author fengshuonan
    * @date 2021/4/1 16:07
    */
-  static findDictPage(params) {
-    return defHttp.get({ url: '/dict/page', params });
+  static findDictPage(params: DictRequest) {
+    return defHttp.get<PageResult<SysDict>>({ url: '/dict/page', params });
   }
 
   /**
@@ -27,7 +29,7 @@ export class SysDictDataApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static add(params) {
+  static add(params: DictRequest) {
     return defHttp.post({ url: '/dict/add', params }, { isTransformResponse: false });
   }
 
@@ -37,7 +39,7 @@ export class SysDictDataApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static del(params) {
+  static del(params: DictRequest) {
     return defHttp.post({ url: '/dict/delete', params }, { isTransformResponse: false });
   }
 
@@ -47,7 +49,7 @@ export class SysDictDataApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static batchDel(params) {
+  static batchDel(params: DictRequest) {
     return defHttp.post({ url: '/dict/batchDelete', params }, { isTransformResponse: false });
   }
 
@@ -57,7 +59,7 @@ export class SysDictDataApi {
    * @author chenjinlong
    * @date 2021/4/1 16:07
    */
-  static edit(params) {
+  static edit(params: DictRequest) {
     return defHttp.post({ url: '/dict/edit', params }, { isTransformResponse: false });
   }
 }

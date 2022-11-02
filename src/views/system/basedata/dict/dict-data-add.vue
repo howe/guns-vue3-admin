@@ -1,56 +1,56 @@
 <template>
-  <div>
-    <!-- 编辑 -->
-    <common-drawer :width="800" :visible="visible" title="修改字典项" @close="updateVisible(false)">
-      <a-form
-        ref="formRef"
-        :model="form"
-        :rules="rules"
-        :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
-        :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
-      >
-        <a-form-item label="名称:" name="dictName">
-          <a-input v-model:value="form.dictName" placeholder="请输入字典名称" allow-clear />
-        </a-form-item>
-        <a-form-item label="编码:" name="dictCode">
-          <a-input
-            v-model:value="form.dictCode"
-            disabled
-            placeholder="请输入字典编码"
-            allow-clear
-          />
-        </a-form-item>
-        <a-form-item label="简称:" name="dictShortName">
-          <a-input v-model:value="form.dictShortName" placeholder="请输入字典简称" allow-clear />
-        </a-form-item>
-        <a-form-item label="简码:" name="dictShortCode">
-          <a-input v-model:value="form.dictShortCode" placeholder="请输入字典简码" allow-clear />
-        </a-form-item>
-        <a-form-item label="排序:" name="dictSort">
-          <a-input-number
-            style="width: 100%"
-            v-model:value="form.dictSort"
-            placeholder="请输入字典排序"
-            allow-clear
-            autocomplete="off"
-          />
-        </a-form-item>
-      </a-form>
-      <template #extra>
-        <a-button type="primary" @click="save" :loading="loading">确定</a-button>
-      </template>
-    </common-drawer>
-  </div>
+  <!-- 新增 -->
+  <a-modal
+    :width="600"
+    :maskClosable="false"
+    :visible="visible"
+    :confirm-loading="loading"
+    :forceRender="true"
+    title="新建字典项"
+    :body-style="{ paddingBottom: '8px' }"
+    @update:visible="updateVisible"
+    @ok="save"
+    @close="updateVisible(false)"
+  >
+    <a-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
+      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
+    >
+      <a-form-item label="名称:" name="dictName">
+        <a-input v-model:value="form.dictName" placeholder="请输入字典名称" allow-clear />
+      </a-form-item>
+      <a-form-item label="编码:" name="dictCode">
+        <a-input v-model:value="form.dictCode" placeholder="请输入字典编码" allow-clear />
+      </a-form-item>
+      <a-form-item label="简称:" name="dictShortName">
+        <a-input v-model:value="form.dictShortName" placeholder="请输入字典简称" allow-clear />
+      </a-form-item>
+      <a-form-item label="简码:" name="dictShortCode">
+        <a-input v-model:value="form.dictShortCode" placeholder="请输入字典简码" allow-clear />
+      </a-form-item>
+      <a-form-item label="排序:" name="dictSort">
+        <a-input-number
+          style="width: 100%"
+          v-model:value="form.dictSort"
+          placeholder="请输入字典排序"
+          allow-clear
+          autocomplete="off"
+        />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
   import { reactive, ref, watch } from 'vue';
   import { message } from 'ant-design-vue/es';
-  import CommonDrawer from '/@/components/CommonDrawer/index.vue';
   import type { FormInstance, Rule } from 'ant-design-vue/es/form';
   import useFormData from '/@/utils/common/use-form-data';
   import { SysDictDataApi } from '/@/api/system/basedata/SysDictDataApi';
-  import { SysDict, DictRequest } from '/@/api/system/basedata/model/SysDictDataModel';
+  import { DictRequest } from '/@/api/system/basedata/model/SysDictDataModel';
 
   const emit = defineEmits<{
     (e: 'update:visible', visible: boolean): void;
@@ -60,8 +60,6 @@
   const props = defineProps<{
     // 弹窗是否打开
     visible: boolean;
-    // 修改回显的数据
-    data: SysDict | null;
     // 配置分类编码
     dictTypeCode: string;
   }>();
@@ -73,7 +71,7 @@
   const loading = ref<boolean>(false);
 
   // 表单数据
-  const { form, resetFormFields, assignFormFields } = useFormData<DictRequest>({
+  const { form, resetFormFields } = useFormData<DictRequest>({
     dictId: undefined,
     dictName: undefined,
     dictCode: undefined,
@@ -89,14 +87,15 @@
     dictSort: [{ required: true, message: '请输入字典顺序', type: 'number', trigger: 'blur' }],
   });
 
-  watch([() => props.visible, () => props.data], () => {
-    if (props.visible && props.data) {
-      assignFormFields(props.data);
-    } else {
-      resetFormFields();
-      formRef.value?.clearValidate();
-    }
-  });
+  watch(
+    () => props.visible,
+    () => {
+      if (!props.visible) {
+        resetFormFields();
+        formRef.value?.clearValidate();
+      }
+    },
+  );
 
   /**
    * 保存和编辑
@@ -113,7 +112,7 @@
       .then(() => {
         // 执行编辑
         form.dictTypeCode = props.dictTypeCode;
-        SysDictDataApi.edit(form)
+        SysDictDataApi.add(form)
           .then((res) => {
             // 移除加载框
             loading.value = false;

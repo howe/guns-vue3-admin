@@ -49,7 +49,7 @@
 
   const props = defineProps<{
     visible: boolean;
-    data: SysApp;
+    data: SysApp | null;
   }>();
 
   // 表单实例
@@ -88,7 +88,7 @@
   });
 
   watch([() => props.visible, () => props.data], () => {
-    if (props.visible) {
+    if (props.visible && props.data) {
       assignFormFields(props.data);
     } else {
       resetFormFields();

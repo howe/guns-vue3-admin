@@ -1,7 +1,7 @@
 <!-- 应用新增弹窗 -->
 <template>
   <a-modal
-    :width="460"
+    :width="600"
     :visible="visible"
     :confirm-loading="loading"
     title="新增应用"

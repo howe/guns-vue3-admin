@@ -1,91 +1,140 @@
 <template>
-  <div>
-    <!-- 编辑 -->
-    <common-drawer
-      :width="800"
-      :visible="visible"
-      title="修改字典类型"
-      @close="updateVisible(false)"
-      v-if="isUpdate"
+  <!-- 新增 -->
+  <a-modal
+    :width="600"
+    :visible="visible"
+    :confirm-loading="loading"
+    :forceRender="true"
+    :maskClosable="false"
+    title="新建字典类型"
+    :body-style="{ paddingBottom: '8px' }"
+    @update:visible="updateVisible"
+    @ok="save"
+    @close="updateVisible(false)"
+  >
+    <a-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
+      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
     >
-      <dict-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></dict-form>
-      <template #extra>
-        <a-button type="primary" @click="save" :loading="loading">确定</a-button>
-      </template>
-    </common-drawer>
-
-    <!-- 新增 -->
-    <a-modal
-      :width="800"
-      :visible="visible"
-      :confirm-loading="loading"
-      :forceRender="true"
-      :maskClosable="false"
-      title="新建字典类型"
-      :body-style="{ paddingBottom: '8px' }"
-      @update:visible="updateVisible"
-      @ok="save"
-      v-else
-      @close="updateVisible(false)"
-    >
-      <dict-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></dict-form>
-    </a-modal>
-  </div>
+      <a-form-item label="类型名称:" name="dictTypeName">
+        <a-input v-model:value="form.dictTypeName" placeholder="请输入字典类型名称" allow-clear />
+      </a-form-item>
+      <a-form-item label="类型编码:" name="dictTypeCode">
+        <a-input
+          v-model:value="form.dictTypeCode"
+          placeholder="请输入字典类型编码"
+          allow-clear
+          :disabled="isUpdate"
+        />
+      </a-form-item>
+      <a-form-item label="业务类型:" name="dictTypeClass">
+        <a-select
+          v-model:value="form.dictTypeClass"
+          placeholder="请选择业务类型"
+          @change="handleChange"
+          allow-clear
+        >
+          <a-select-option :value="1">业务类型</a-select-option>
+          <a-select-option :value="2">系统类型</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="业务编码:" name="dictTypeBusCode" v-show="showDictTypeBusCode">
+        <a-input v-model:value="form.dictTypeBusCode" placeholder="请输入业务编码" allow-clear />
+      </a-form-item>
+      <a-form-item label="排序:" name="dictTypeSort">
+        <a-input-number
+          style="width: 100%"
+          v-model:value="form.dictTypeSort"
+          placeholder="请输入字典类型排序"
+          allow-clear
+          autocomplete="off"
+        />
+      </a-form-item>
+      <a-form-item label="描述信息:" name="dictTypeDesc">
+        <a-input
+          v-model:value="form.dictTypeDesc"
+          placeholder="请输入描述信息"
+          allow-clear
+          autocomplete="off"
+        />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
-  import { message } from 'ant-design-vue';
-  import DictForm from './dict-form.vue';
+  import { reactive, ref, watch } from 'vue';
+  import { message } from 'ant-design-vue/es';
+  import type { FormInstance, Rule } from 'ant-design-vue/es/form';
   import { SysDictTypeApi } from '/@/api/system/basedata/SysDictTypeApi';
-  import { reactive, ref, watch, nextTick, onMounted } from 'vue';
-  import CommonDrawer from '/@/components/CommonDrawer/index.vue';
+  import useFormData from '/@/utils/common/use-form-data';
+  import { DictTypeRequest, SysDictType } from '/@/api/system/basedata/model/SysDictTypeModel';
+
+  const emit = defineEmits<{
+    (e: 'done'): void;
+    (e: 'update:visible', value: boolean): void;
+  }>();
 
   const props = defineProps<{
     // 弹窗是否打开
-    visible: Boolean;
+    visible: boolean;
     // 修改回显的数据
-    data?: Object;
+    data?: SysDictType | null;
   }>();
 
-  const emits = defineEmits<{
-    (e: 'update:visible', visible: boolean): void;
-    (e: 'done'): void;
-  }>();
-
-  const state = reactive({
-    form: {},
-  });
-
-  // ref
-  const formRef = ref(null);
+  // 表单实例
+  const formRef = ref<FormInstance | null>(null);
 
   // 提交状态
   const loading = ref<boolean>(false);
   // 是否是修改
   const isUpdate = ref<boolean>(false);
+  // 是否显示字典业务代码
+  const showDictTypeBusCode = ref<boolean>(false);
 
-  onMounted(() => {
-    init();
+  // 表单数据
+  const { form, resetFormFields } = useFormData<DictTypeRequest>({
+    dictTypeId: undefined,
+    dictTypeClass: undefined,
+    dictTypeBusCode: undefined,
+    dictTypeCode: undefined,
+    dictTypeName: undefined,
+    dictTypeDesc: undefined,
+    dictTypeSort: undefined,
+  });
+
+  // 验证规则
+  const rules = reactive<Record<string, Rule[]>>({
+    dictTypeName: [{ required: true, message: '请输入字典名称', type: 'string', trigger: 'blur' }],
+    dictTypeCode: [{ required: true, message: '请输入字典编码', type: 'string', trigger: 'blur' }],
+    dictTypeClass: [{ required: true, message: '请选择业务类型', type: 'number', trigger: 'blur' }],
+    dictTypeSort: [{ required: true, message: '请输入字典顺序', type: 'number', trigger: 'blur' }],
   });
 
   watch(
-    () => props.data,
-    (val) => {
-      init();
+    () => props.visible,
+    () => {
+      if (!props.visible) {
+        resetFormFields();
+        formRef.value?.clearValidate();
+      }
     },
   );
 
-  // 初始化数据
-  const init = () => {
-    if (props.data) {
-      state.form = Object.assign({}, props.data);
-      isUpdate.value = true;
+  /**
+   * 监听业务类型选择
+   *
+   * @author fengshuonan
+   * @date 2022/5/9 22:24
+   */
+  const handleChange = (value: number) => {
+    if (value === 1) {
+      showDictTypeBusCode.value = true;
     } else {
-      state.form = {};
-      isUpdate.value = false;
-    }
-    if (formRef.value && formRef.value.$refs.formRef) {
-      formRef.value.$refs.formRef.clearValidate();
+      showDictTypeBusCode.value = false;
     }
   };
 
@@ -97,42 +146,27 @@
    */
   const save = () => {
     // 校验表单
-    formRef.value.$refs.formRef.validate().then((valid) => {
-      if (valid) {
-        // 修改加载框为正在加载
-        loading.value = true;
+    if (!formRef.value) {
+      return;
+    }
+    formRef.value.validate().then(() => {
+      // 修改加载框为正在加载
+      loading.value = true;
 
-        let result = null;
-
-        // 执行编辑或修改方法
-        if (isUpdate.value) {
-          result = SysDictTypeApi.edit(state.form);
-        } else {
-          result = SysDictTypeApi.add(state.form);
-        }
-        result
-          .then((result) => {
-            // 移除加载框
-            loading.value = false;
-
-            // 提示添加成功
-            message.success(result.message);
-
-            // 如果是新增，则form表单置空
-            if (!isUpdate.value) {
-              state.form = {};
-            }
-
-            // 关闭弹框，通过控制visible的值，传递给父组件
-            updateVisible(false);
-
-            // 触发父组件done事件
-            emits('done');
-          })
-          .catch(() => {
-            loading.value = false;
-          });
-      }
+      SysDictTypeApi.add(form)
+        .then((res) => {
+          // 移除加载框
+          loading.value = false;
+          // 提示添加成功
+          message.success(res.message);
+          // 关闭弹框，通过控制visible的值，传递给父组件
+          updateVisible(false);
+          // 触发父组件done事件
+          emit('done');
+        })
+        .catch(() => {
+          loading.value = false;
+        });
     });
   };
 
@@ -144,8 +178,6 @@
    * @date 2021/4/7 12:00
    */
   const updateVisible = (value: boolean) => {
-    emits('update:visible', value);
+    emit('update:visible', value);
   };
 </script>
-
-<style></style>
