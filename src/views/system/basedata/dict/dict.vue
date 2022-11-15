@@ -71,14 +71,12 @@
 
   // 表格实例
   const tableRef = ref<Nullable<TableActionType>>(null);
-
   // 当前行数据
   const current = ref<SysDictType | null>(null);
   // 编辑回显数据
   const editData = ref<SysDictType | null>(null);
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
-
   const dictDataRef = ref();
 
   // 接口设置

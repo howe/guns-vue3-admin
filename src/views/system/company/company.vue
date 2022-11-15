@@ -98,7 +98,13 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <company-edit v-model:visible="showEdit" :isUpdate="updateOrg" :data="currentOrgInfo" @done="reload" :org-list="orgList" />
+    <company-edit
+      v-model:visible="showEdit"
+      :isUpdate="updateOrg"
+      :data="currentOrgInfo"
+      @done="reload"
+      :org-list="orgList"
+    />
   </div>
 </template>
 

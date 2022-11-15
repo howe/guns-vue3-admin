@@ -48,16 +48,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { BasicTable, useTable } from '/@/components/Table';
-  import { message, Modal } from 'ant-design-vue';
   import { createVNode, onMounted, reactive, ref } from 'vue';
+  import { BasicColumn, BasicTable, TableActionType, useTable } from '/@/components/Table';
+  import { message, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
   import SysConfigTable from './sysconfig-table.vue';
   import SysConfigTypeEdit from './sysconfig-type-edit.vue';
   import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
+  import { SysDict } from '/@/api/system/basedata/model/SysDictDataModel';
 
   // 左侧表格配置
-  const columns = ref<string[]>([
+  const columns = ref<BasicColumn[]>([
     {
       title: '配置类型',
       dataIndex: 'dictName',
@@ -68,35 +69,32 @@
     },
   ]);
 
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
   // 当前行数据
-  const current = ref<any>(null);
-
-  // ref
-  const tableRef = ref(null);
-  const sysTableRef = ref(null);
-
+  const current = ref<SysDict | null>(null);
   // 配置类型的字典数据
   const configTypeDict = ref<any>({});
-
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
-
   // 编辑回显数据
-  const editData = ref<any>(null);
+  const editData = ref<SysDict | null>(null);
+  const sysTableRef = ref();
 
   // 接口设置
   const [registerTable, {}] = useTable({
     afterFetch: (data) => {
       if (data && data.length > 0) {
-        tableRef.value.setSelectedRowKeys([data[0].dictCode]);
+        tableRef.value?.setSelectedRowKeys([data[0].dictCode]);
         current.value = data[0];
       }
     },
   });
 
   //左侧配置类型选择改变
-  const onSelectChange = (val: any, row: any) => {
-    if (row && row.length > 0) current.value = row[0];
+  const onSelectChange = (selectedRowKeys: string[] | number[], selectedRows: SysDict[]) => {
+    tableRef.value?.setSelectedRowKeys(selectedRowKeys);
+    if (selectedRows && selectedRows.length > 0) current.value = selectedRows[0];
   };
 
   onMounted(async () => {
@@ -114,7 +112,7 @@
    * @date 2021/4/9 11:49
    */
   const reload = () => {
-    tableRef.value.reload();
+    tableRef.value?.reload();
   };
 
   /**

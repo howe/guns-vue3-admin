@@ -199,14 +199,17 @@
     }
   };
 
-  watch(() => props.groupCode, val => {
-    where.groupCode = val;
-    reload();
-  })
+  watch(
+    () => props.groupCode,
+    (val) => {
+      where.groupCode = val;
+      reload();
+    },
+  );
 
   defineExpose({
     showEdit,
-  })
+  });
 </script>
 
 <style></style>

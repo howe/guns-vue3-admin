@@ -8,7 +8,7 @@
       @close="updateVisible(false)"
       v-if="isUpdate"
     >
-      <sysconfig-form v-model:form="state.form" ref="formRef"></sysconfig-form>
+      <sysconfig-form v-model:form="state.form" ref="formRef" />
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
@@ -28,7 +28,7 @@
       @ok="save"
       @close="updateVisible(false)"
     >
-      <sysconfig-form v-model:form="state.form" ref="formRef"></sysconfig-form>
+      <sysconfig-form v-model:form="state.form" ref="formRef" />
     </a-modal>
   </div>
 </template>
