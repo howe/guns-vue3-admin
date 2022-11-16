@@ -78,5 +78,3 @@
     emits('save');
   };
 </script>
-
-<style></style>

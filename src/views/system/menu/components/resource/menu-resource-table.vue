@@ -62,5 +62,3 @@
     emits('checkedItem', checkedValue, record);
   };
 </script>
-
-<style></style>

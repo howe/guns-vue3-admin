@@ -187,5 +187,3 @@
     reload();
   };
 </script>
-
-<style></style>

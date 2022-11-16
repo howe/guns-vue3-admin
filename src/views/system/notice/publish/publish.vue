@@ -172,5 +172,3 @@
     reload();
   };
 </script>
-
-<style></style>

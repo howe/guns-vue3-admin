@@ -287,5 +287,3 @@
     );
   };
 </script>
-
-<style></style>

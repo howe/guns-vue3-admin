@@ -209,5 +209,3 @@
     state.form.jdbcUrl = url;
   };
 </script>
-
-<style></style>

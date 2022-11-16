@@ -153,5 +153,3 @@
     reload();
   };
 </script>
-
-<style></style>

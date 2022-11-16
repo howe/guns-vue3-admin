@@ -240,5 +240,3 @@
     updateOrg.value = true;
   };
 </script>
-
-<style></style>

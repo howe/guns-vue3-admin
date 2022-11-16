@@ -1,10 +1,16 @@
 <template>
   <div>
-    <!-- 编辑 -->
-    <common-drawer
-      :width="800"
+    <!-- 新增 -->
+    <a-modal
+      :width="600"
       :visible="visible"
-      title="修改系统配置"
+      :confirm-loading="loading"
+      :forceRender="true"
+      :maskClosable="false"
+      title="添加系统配置"
+      :body-style="{ paddingBottom: '8px' }"
+      @update:visible="updateVisible"
+      @ok="save"
       @close="updateVisible(false)"
     >
       <a-form
@@ -34,10 +40,7 @@
           <a-textarea v-model:value="form.remark" placeholder="请输入备注" :rows="4" />
         </a-form-item>
       </a-form>
-      <template #extra>
-        <a-button type="primary" @click="save" :loading="loading">确定</a-button>
-      </template>
-    </common-drawer>
+    </a-modal>
   </div>
 </template>
 
@@ -46,9 +49,8 @@
   import { message } from 'ant-design-vue/es';
   import type { FormInstance, Rule } from 'ant-design-vue/es/form';
   import useFormData from '/@/utils/common/use-form-data';
-  import CommonDrawer from '/@/components/CommonDrawer/index.vue';
   import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
-  import { SysConfig, SysConfigParam } from '/@/api/system/basedata/model/SysConfigModel';
+  import { SysConfigParam } from '/@/api/system/basedata/model/SysConfigModel';
 
   const emit = defineEmits<{
     (e: 'done'): void;
@@ -58,8 +60,6 @@
   const props = defineProps<{
     // 弹窗是否打开
     visible: boolean;
-    // 修改回显的数据
-    data?: SysConfig | null;
     // 配置分类编码
     groupCode: string;
   }>();
@@ -72,7 +72,7 @@
   const sysFlagChecked = ref<boolean>(false);
 
   // 表单数据
-  const { form, resetFormFields, assignFormFields } = useFormData<SysConfigParam>({
+  const { form, resetFormFields } = useFormData<SysConfigParam>({
     configId: undefined,
     configName: undefined,
     configCode: undefined,
@@ -89,14 +89,15 @@
     configValue: [{ required: true, message: '请输入配置值', type: 'string', trigger: 'blur' }],
   });
 
-  watch([() => props.visible, () => props.data], () => {
-    if (props.visible && props.data) {
-      assignFormFields(props.data);
-    } else {
-      resetFormFields();
-      formRef.value?.clearValidate();
-    }
-  });
+  watch(
+    () => props.visible,
+    () => {
+      if (!props.visible) {
+        resetFormFields();
+        formRef.value?.clearValidate();
+      }
+    },
+  );
 
   /**
    * 保存编辑
@@ -119,8 +120,8 @@
         form.groupCode = props.groupCode;
         // 修改加载框为正在加载
         loading.value = true;
-        // 执行编辑保存
-        SysConfigApi.editSysConfig(form)
+        // 执行新增保存
+        SysConfigApi.addSysConfig(form)
           .then((result) => {
             // 移除加载框
             loading.value = false;

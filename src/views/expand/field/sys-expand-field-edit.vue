@@ -121,7 +121,7 @@
   });
 
   watch([() => props.visible, () => props.data], () => {
-    if (props.visible) {
+    if (props.visible && props.data) {
       assignFormFields(props.data);
     } else {
       resetFormFields();
@@ -173,5 +173,3 @@
     emit('update:visible', value);
   };
 </script>
-
-<style></style>

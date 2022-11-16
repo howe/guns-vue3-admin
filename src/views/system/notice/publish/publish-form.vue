@@ -55,7 +55,7 @@
   const emits = defineEmits<{
     (e: 'handleChange', targetKeys): void;
   }>();
-  
+
   /**
    * 选中人员时的监听
    *
@@ -66,5 +66,3 @@
     emits('handleChange', targetKeys);
   };
 </script>
-
-<style></style>

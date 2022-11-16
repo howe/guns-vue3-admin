@@ -14,7 +14,7 @@
         @save="save"
         :actionClassList="actionClassList"
         :actionClassListLoading="actionClassListLoading"
-      ></timer-form>
+      />
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
@@ -40,7 +40,7 @@
         @save="save"
         :actionClassList="actionClassList"
         :actionClassListLoading="actionClassListLoading"
-      ></timer-form>
+      />
     </a-modal>
   </div>
 </template>
@@ -172,5 +172,3 @@
     emits('update:visible', value);
   };
 </script>
-
-<style></style>

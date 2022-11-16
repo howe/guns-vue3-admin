@@ -74,7 +74,7 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <field-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit"/>
+    <field-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit" />
   </div>
 </template>
 
@@ -187,5 +187,3 @@
     showEdit.value = true;
   };
 </script>
-
-<style></style>

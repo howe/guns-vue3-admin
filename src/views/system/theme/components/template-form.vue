@@ -52,5 +52,3 @@
     templateType: [{ required: true, message: '请输入模板类型', type: 'number', trigger: 'blur' }],
   });
 </script>
-
-<style></style>

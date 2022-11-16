@@ -13,20 +13,20 @@
   >
     <a-form
       ref="formRef"
-      :model="state.form"
+      :model="form"
       :rules="rules"
-      :label-col="{ md: { span: 4 }, sm: { span: 24 } }"
-      :wrapper-col="{ md: { span: 20 }, sm: { span: 24 } }"
+      :label-col="{ md: { span: 5 }, sm: { span: 24 } }"
+      :wrapper-col="{ md: { span: 17 }, sm: { span: 24 } }"
     >
       <a-form-item label="类型名称:" name="dictName">
-        <a-input v-model:value="state.form.dictName" placeholder="请输入类型名称" allow-clear />
+        <a-input v-model:value="form.dictName" placeholder="请输入类型名称" allow-clear />
       </a-form-item>
       <a-form-item label="类型编码:" name="dictCode">
-        <a-input v-model:value="state.form.dictCode" placeholder="请输入类型编码" allow-clear />
+        <a-input v-model:value="form.dictCode" placeholder="请输入类型编码" allow-clear />
       </a-form-item>
       <a-form-item label="排序号:" name="dictSort">
         <a-input-number
-          v-model:value="state.form.dictSort"
+          v-model:value="form.dictSort"
           placeholder="请输入排序号"
           :min="0"
           class="ele-fluid"
@@ -38,27 +38,39 @@
 
 <script lang="ts" setup>
   import { reactive, ref, watch } from 'vue';
-  import { message } from 'ant-design-vue';
+  import { message } from 'ant-design-vue/es';
+  import type { FormInstance, Rule } from 'ant-design-vue/es/form';
+  import useFormData from '/@/utils/common/use-form-data';
   import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
+  import { DictRequest, SysDict } from '/@/api/system/basedata/model/SysDictDataModel';
+
+  const emit = defineEmits<{
+    (e: 'done'): void;
+    (e: 'update:visible', visible: boolean): void;
+  }>();
 
   const props = defineProps<{
     // 弹窗是否打开
-    visible: Boolean;
+    visible: boolean;
     // 修改回显的数据
-    data?: Object;
+    data?: SysDict | null;
   }>();
 
-  const emits = defineEmits<{
-    (e: 'update:visible', visible: boolean): void;
-    (e: 'done'): void;
-  }>();
+  // 表单实例
+  const formRef = ref<FormInstance | null>(null);
 
-  const state = reactive({
-    form: {},
+  // 表单数据
+  const { form, resetFormFields } = useFormData<DictRequest>({
+    dictId: undefined,
+    dictName: undefined,
+    dictCode: undefined,
+    dictSort: undefined,
+    dictTypeCode: undefined,
+    dictTypeId: undefined,
   });
 
   // 验证规则
-  const rules = reactive({
+  const rules = reactive<Record<string, Rule[]>>({
     dictName: [{ required: true, message: '请输入类型名称', type: 'string', trigger: 'blur' }],
     dictCode: [{ required: true, message: '请输入类型编码', type: 'string', trigger: 'blur' }],
     dictSort: [{ required: true, message: '请输入排序号', type: 'number', trigger: 'blur' }],
@@ -67,16 +79,13 @@
   // 提交状态
   const loading = ref<boolean>(false);
 
-  // ref
-  const formRef = ref(null);
-
   watch(
     () => props.visible,
-    (val) => {
-      if (formRef.value) {
-        formRef.value.clearValidate();
+    () => {
+      if (!props.visible) {
+        resetFormFields();
+        formRef.value?.clearValidate();
       }
-      state.form = Object.assign({}, props.data);
     },
   );
 
@@ -86,23 +95,29 @@
    * @author fengshuonan
    * @date 2021/4/9 13:42
    */
-  const save = async () => {
-    await formRef.value.validate();
+  const save = () => {
+    // 校验表单
+    if (!formRef.value) {
+      return;
+    }
+    formRef.value.validate().then(() => {
+      // 修改加载框为正在加载
+      loading.value = true;
 
-    // 执行新增
-    let result = SysConfigApi.addConfigType(state.form);
-    result.then((result) => {
-      // 提示添加成功
-      message.success(result.message);
-
-      // 如果是新增，则form表单置空
-      state.form = {};
-
-      // 关闭弹框，通过控制visible的值，传递给父组件
-      updateVisible(false);
-
-      // 触发父组件done事件
-      emits('done');
+      SysConfigApi.addConfigType(form)
+        .then((res) => {
+          // 移除加载框
+          loading.value = false;
+          // 提示添加成功
+          message.success(res.message);
+          // 关闭弹框，通过控制visible的值，传递给父组件
+          updateVisible(false);
+          // 触发父组件done事件
+          emit('done');
+        })
+        .catch(() => {
+          loading.value = false;
+        });
     });
   };
 
@@ -114,8 +129,6 @@
    * @date 2021/4/7 12:00
    */
   const updateVisible = (value: boolean) => {
-    emits('update:visible', value);
+    emit('update:visible', value);
   };
 </script>
-
-<style></style>

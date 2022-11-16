@@ -65,14 +65,14 @@
   import { message } from 'ant-design-vue';
 
   const props = defineProps<{
-    form: Object,
-    rules,
+    form: Object;
+    rules;
     // 是否禁用主题
-    disabledChangeTemplate: Boolean,
+    disabledChangeTemplate: Boolean;
     // 临时存放文件列表（用来限制上传数量）
-    tempFileList: Object,
+    tempFileList: Object;
     // 模板属性
-    templateFields: Array,
+    templateFields: Array;
   }>();
 
   const emits = defineEmits<{
@@ -147,5 +147,3 @@
     }
   };
 </script>
-
-<style></style>

@@ -88,5 +88,3 @@
     loading.value = false;
   };
 </script>
-
-<style></style>

@@ -142,5 +142,3 @@
     emit('update:visible', value);
   };
 </script>
-
-<style></style>

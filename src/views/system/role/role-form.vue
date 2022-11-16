@@ -36,5 +36,3 @@
     roleSort: [{ required: true, message: '请输入排序号', type: 'number', trigger: 'blur' }],
   });
 </script>
-
-<style></style>

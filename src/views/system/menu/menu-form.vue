@@ -179,5 +179,3 @@
     menuSort: [{ required: true, type: 'number', message: '请输入排序号', trigger: 'blur' }],
   });
 </script>
-
-<style></style>

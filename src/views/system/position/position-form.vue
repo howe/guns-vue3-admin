@@ -60,5 +60,3 @@
     positionSort: [{ required: true, message: '请输入数字顺序', type: 'number', trigger: 'blur' }],
   });
 </script>
-
-<style></style>

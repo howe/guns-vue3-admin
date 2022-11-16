@@ -47,7 +47,15 @@
     </a-card>
 
     <!-- 编辑弹窗 -->
-    <org-edit v-model:visible="showEdit" :isUpdate="updateOrg" v-if="showEdit" :data="currentOrgInfo" @done="reload" :org-list="orgList" defaultKey="1"/>
+    <org-edit
+      v-model:visible="showEdit"
+      :isUpdate="updateOrg"
+      v-if="showEdit"
+      :data="currentOrgInfo"
+      @done="reload"
+      :org-list="orgList"
+      defaultKey="1"
+    />
   </div>
 </template>
 
@@ -155,11 +163,9 @@
 
   const reload = () => {
     emits('updateOrgList');
-  }
+  };
 
   defineExpose({
     showEdit,
-  })
+  });
 </script>
-
-<style></style>

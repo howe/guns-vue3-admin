@@ -8,7 +8,7 @@
       @close="updateVisible(false)"
       v-if="isUpdate"
     >
-      <field-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></field-form>
+      <field-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate" />
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
@@ -28,7 +28,7 @@
       v-else
       @close="updateVisible(false)"
     >
-      <field-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate"></field-form>
+      <field-form v-model:form="state.form" ref="formRef" :isUpdate="isUpdate" />
     </a-modal>
   </div>
 </template>
@@ -145,5 +145,3 @@
     emits('update:visible', value);
   };
 </script>
-
-<style></style>

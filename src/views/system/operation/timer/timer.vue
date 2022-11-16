@@ -98,7 +98,7 @@
     </div>
 
     <!-- 编辑弹窗 -->
-    <sys-timer-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit"/>
+    <sys-timer-edit v-model:visible="showEdit" :data="current" @done="reload" v-if="showEdit" />
   </div>
 </template>
 
@@ -252,5 +252,3 @@
     reload();
   };
 </script>
-
-<style></style>

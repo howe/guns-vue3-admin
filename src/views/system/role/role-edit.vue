@@ -8,7 +8,7 @@
       @close="updateVisible(false)"
       v-if="isUpdate"
     >
-      <role-form v-model:form="state.form" ref="formRef"></role-form>
+      <role-form v-model:form="state.form" ref="formRef" />
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
@@ -28,7 +28,7 @@
       v-else
       @close="updateVisible(false)"
     >
-      <role-form v-model:form="state.form" ref="formRef"></role-form>
+      <role-form v-model:form="state.form" ref="formRef" />
     </a-modal>
   </div>
 </template>
@@ -148,5 +148,3 @@
     });
   };
 </script>
-
-<style></style>

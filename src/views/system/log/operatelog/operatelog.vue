@@ -210,5 +210,3 @@
     showDetail.value = true;
   };
 </script>
-
-<style></style>

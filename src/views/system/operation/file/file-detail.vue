@@ -71,5 +71,3 @@
     emits('update:visible', value);
   };
 </script>
-
-<style></style>

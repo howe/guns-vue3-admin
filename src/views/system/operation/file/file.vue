@@ -313,5 +313,3 @@
     }
   };
 </script>
-
-<style></style>

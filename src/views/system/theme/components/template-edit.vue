@@ -13,11 +13,7 @@
       @tabChange="tabChange"
     >
       <!-- 基本信息 -->
-      <template-form
-        v-model:form="state.form"
-        ref="formRef"
-        v-if="activeKey == '1'"
-      ></template-form>
+      <template-form v-model:form="state.form" ref="formRef" v-if="activeKey == '1'" />
       <!-- 配置弹窗 -->
       <template-config ref="TemplateConfigRef" v-else />
 
@@ -44,7 +40,7 @@
       v-else
       @close="updateVisible(false)"
     >
-      <template-form v-model:form="state.form" ref="formRef"></template-form>
+      <template-form v-model:form="state.form" ref="formRef" />
     </a-modal>
   </div>
 </template>
@@ -192,5 +188,3 @@
     emits('update:visible', value);
   };
 </script>
-
-<style></style>

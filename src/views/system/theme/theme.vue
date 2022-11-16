@@ -202,5 +202,3 @@
     reload();
   };
 </script>
-
-<style></style>

@@ -35,7 +35,7 @@
         <template #toolbar>
           <div class="table-toolbar">
             <a-space>
-              <a-button type="primary" @click="openEdit()">
+              <a-button type="primary" @click="openAdd()">
                 <template #icon>
                   <plus-outlined />
                 </template>
@@ -79,32 +79,35 @@
       :group-code="groupCode"
       :data="current"
       @done="reload"
-      v-if="showEdit"
     />
+
+    <!-- 编辑弹窗 -->
+    <sys-config-add v-model:visible="showAdd" :group-code="groupCode" @done="reload" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, watch } from 'vue';
-  import { BasicTable } from '/@/components/Table';
-  import { message } from 'ant-design-vue';
+  import { ref, watch } from 'vue';
+  import { BasicColumn, BasicTable, TableActionType } from '/@/components/Table';
+  import { message } from 'ant-design-vue/es';
+  import useSearch from '/@/utils/common/use-search';
   import SysConfigEdit from './sysconfig-edit.vue';
+  import SysConfigAdd from './sysconfig-add.vue';
   import { SysConfigApi } from '/@/api/system/basedata/SysConfigApi';
+  import { SysConfigParam } from '/@/api/system/basedata/model/SysConfigModel';
 
   const props = defineProps<{
     // 配置组编码
-    groupCode: String;
+    groupCode: string;
   }>();
 
   // 查询条件
-  const where = reactive({
-    configName: '',
-    configCode: '',
+  const { where, resetWhereFields } = useSearch<SysConfigParam>({
     groupCode: props.groupCode,
   });
 
   // 表格配置
-  const columns = <string[]>[
+  const columns = ref<BasicColumn[]>([
     {
       title: '配置名称',
       dataIndex: 'configName',
@@ -138,19 +141,18 @@
       width: 120,
       align: 'center',
     },
-  ];
+  ]);
 
   // 多选选中列表
   const checkedKeys = ref<Array<string | number>>([]);
-
   // 当前行数据
   const current = ref<any>(null);
-
   // 是否显示新增编辑弹框
   const showEdit = ref<boolean>(false);
-
-  // ref
-  const tableRef = ref(null);
+  // 是否显示新增编辑弹框
+  const showAdd = ref<boolean>(false);
+  // 表格实例
+  const tableRef = ref<Nullable<TableActionType>>(null);
 
   /**
    * 点击查询
@@ -159,7 +161,7 @@
    */
   const reload = () => {
     checkedKeys.value = [];
-    tableRef.value.reload({ page: 1 });
+    tableRef.value?.reload({ page: 1 });
   };
 
   /**
@@ -168,8 +170,7 @@
    * @Date: 2022-10-12 09:38:29
    */
   const reset = () => {
-    where.configName = '';
-    where.configCode = '';
+    resetWhereFields();
     reload();
   };
 
@@ -199,6 +200,16 @@
     }
   };
 
+  /**
+   * 打开新增弹窗
+   *
+   * @author yxx
+   * @date 2022/04/04 12:24
+   */
+  const openAdd = () => {
+    showAdd.value = true;
+  };
+
   watch(
     () => props.groupCode,
     (val) => {
@@ -211,5 +222,3 @@
     showEdit,
   });
 </script>
-
-<style></style>

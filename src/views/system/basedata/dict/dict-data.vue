@@ -92,7 +92,9 @@
   }>();
 
   // 查询条件
-  const { where, resetWhereFields } = useSearch<DictRequest>({});
+  const { where, resetWhereFields } = useSearch<DictRequest>({
+    dictTypeCode: props.dictTypeCode,
+  });
 
   // 表格配置
   const columns = ref<BasicColumn[]>([
@@ -192,5 +194,3 @@
     showEdit,
   });
 </script>
-
-<style></style>

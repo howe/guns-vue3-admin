@@ -50,25 +50,24 @@
   // 表格列配置
   const columns = ref<string[]>([
     {
-          title: '接口分类',
-          key: 'controller',
-          dataIndex: 'controller',
-          width: 200
-        },
-        {
-          title: '接口列表',
-          key: 'apis',
-          dataIndex: 'apis',
-          width: 900
-        }
+      title: '接口分类',
+      key: 'controller',
+      dataIndex: 'controller',
+      width: 200,
+    },
+    {
+      title: '接口列表',
+      key: 'apis',
+      dataIndex: 'apis',
+      width: 900,
+    },
   ]);
-    // 菜单id
+  // 菜单id
   const menuId = ref<string>('');
   // 弹框是否显示
   const visible = ref<boolean>(false);
   // 是否显示抽屉
   const isShow = ref<boolean>(true);
-
 
   /**
    * 打开绑定资源的窗口，业务类型（1：菜单，2：菜单下按钮）
@@ -88,121 +87,124 @@
   };
 
   /**
-     * 加载资源列表
-     *
-     * @author fengshuonan
-     * @date 2021/8/8 23:34
-     */
-    const loadMenuResource = async() => {
-      // 开启加载
-      loading.value = true;
+   * 加载资源列表
+   *
+   * @author fengshuonan
+   * @date 2021/8/8 23:34
+   */
+  const loadMenuResource = async () => {
+    // 开启加载
+    loading.value = true;
 
-      // 获取资源
-      dataSource.value = await SysResourceApi.getMenuResourceList({ businessId: businessId.value });
+    // 获取资源
+    dataSource.value = await SysResourceApi.getMenuResourceList({ businessId: businessId.value });
 
-      // 资源整理成map
-      for (const item of dataSource.value) {
-        // 获取所有的子节点
-        let totalNodes = [];
-        for (const subItem of item.children) {
-          totalNodes.push({ label: subItem.nodeName, value: subItem.code });
-        }
-        item.totalNodes = totalNodes;
-
-        // 获取选中的子节点
-        item.selectedNodes = item.children
-          .filter(value => {
-            return value.checked;
-          })
-          .map(value => value.code);
+    // 资源整理成map
+    for (const item of dataSource.value) {
+      // 获取所有的子节点
+      let totalNodes = [];
+      for (const subItem of item.children) {
+        totalNodes.push({ label: subItem.nodeName, value: subItem.code });
       }
+      item.totalNodes = totalNodes;
 
-      // 关闭加载
-      loading.value = false;
-    };
+      // 获取选中的子节点
+      item.selectedNodes = item.children
+        .filter((value) => {
+          return value.checked;
+        })
+        .map((value) => value.code);
+    }
 
-    /**
-     * 处理选中组的事件
-     *
-     * @author fengshuonan
-     * @date 2021/8/8 23:35
-     */
-    const checkedGroup = async(event: any, record: any) => {
-      // 如果是全选事件，则变为全选，如果是非全选事件则变为非全选
-      if (event.target.checked) {
-        record.indeterminate = false;
-        record.selectedNodes = record.totalNodes.map(item => item.value);
-      } else {
-        record.selectedNodes = [];
+    // 关闭加载
+    loading.value = false;
+  };
+
+  /**
+   * 处理选中组的事件
+   *
+   * @author fengshuonan
+   * @date 2021/8/8 23:35
+   */
+  const checkedGroup = async (event: any, record: any) => {
+    // 如果是全选事件，则变为全选，如果是非全选事件则变为非全选
+    if (event.target.checked) {
+      record.indeterminate = false;
+      record.selectedNodes = record.totalNodes.map((item) => item.value);
+    } else {
+      record.selectedNodes = [];
+    }
+
+    // 开启加载
+    loading.value = true;
+
+    // 将选中的资源请求后端
+    let modularTotalResource = record.totalNodes.map((item) => item.value);
+    let selectedResource = record.selectedNodes;
+    await MenuApi.addMenuResourceBind({
+      businessId: businessId.value,
+      businessType: businessType.value,
+      modularTotalResource,
+      selectedResource,
+    });
+
+    // 关闭加载
+    loading.value = false;
+  };
+
+  /**
+   * 处理选中的节点数据
+   *
+   * @author fengshuonan
+   * @date 2021/8/8 23:35
+   */
+  const checkedItem = (checkedValue: any, record: any) => {
+    let totalSelectFlag = true;
+
+    // 获取当前行所有的code
+    const totalNodes = record.totalNodes.map((item) => item.value);
+    for (const node of totalNodes) {
+      if (!record.selectedNodes.includes(node)) {
+        totalSelectFlag = false;
       }
+    }
 
-      // 开启加载
-      loading.value = true;
+    // 如果全部选中
+    if (totalSelectFlag) {
+      record.checked = true;
+      record.indeterminate = false;
+    } else {
+      record.checked = false;
+      record.indeterminate = true;
+    }
 
-      // 将选中的资源请求后端
-      let modularTotalResource = record.totalNodes.map(item => item.value);
-      let selectedResource = record.selectedNodes;
-      await MenuApi.addMenuResourceBind({
-        businessId: businessId.value,
-        businessType: businessType.value,
-        modularTotalResource,
-        selectedResource
-      });
+    // 如果全部未选中
+    if (record.selectedNodes.length === 0) {
+      record.indeterminate = false;
+    }
 
-      // 关闭加载
-      loading.value = false;
-    };
+    // 将选中的资源请求后端
+    let modularTotalResource = record.totalNodes.map((item) => item.value);
+    let selectedResource = record.selectedNodes;
+    MenuApi.addMenuResourceBind({
+      businessId: businessId.value,
+      businessType: businessType.value,
+      modularTotalResource,
+      selectedResource,
+    });
+  };
 
-    /**
-     * 处理选中的节点数据
-     *
-     * @author fengshuonan
-     * @date 2021/8/8 23:35
-     */
-    const checkedItem = (checkedValue: any, record: any) => {
-      let totalSelectFlag = true;
+  /**
+   * 更新按钮管理界面的弹框是否显示
+   *
+   * @author fengshuonan
+   * @date 2021/8/8 23:34
+   */
+  const updateVisible = (value: boolean) => {
+    visible.value = value;
+  };
 
-      // 获取当前行所有的code
-      const totalNodes = record.totalNodes.map(item => item.value);
-      for (const node of totalNodes) {
-        if (!record.selectedNodes.includes(node)) {
-          totalSelectFlag = false;
-        }
-      }
-
-      // 如果全部选中
-      if (totalSelectFlag) {
-        record.checked = true;
-        record.indeterminate = false;
-      } else {
-        record.checked = false;
-        record.indeterminate = true;
-      }
-
-      // 如果全部未选中
-      if (record.selectedNodes.length === 0) {
-        record.indeterminate = false;
-      }
-
-      // 将选中的资源请求后端
-      let modularTotalResource = record.totalNodes.map(item => item.value);
-      let selectedResource = record.selectedNodes;
-      MenuApi.addMenuResourceBind({ businessId: businessId.value, businessType: businessType.value, modularTotalResource, selectedResource });
-    };
-
-    /**
-     * 更新按钮管理界面的弹框是否显示
-     *
-     * @author fengshuonan
-     * @date 2021/8/8 23:34
-     */
-    const updateVisible = (value: boolean) => {
-      visible.value = value;
-    };
-
-    defineExpose({
-        openWindow,
-    })
+  defineExpose({
+    openWindow,
+  });
 </script>
-
-<style></style>

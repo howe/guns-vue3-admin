@@ -243,5 +243,3 @@
     reload();
   };
 </script>
-
-<style></style>

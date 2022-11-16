@@ -269,5 +269,3 @@
     emits('openBindResource', row);
   };
 </script>
-
-<style></style>

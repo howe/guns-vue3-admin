@@ -179,5 +179,3 @@
     showEdit.value = true;
   };
 </script>
-
-<style></style>

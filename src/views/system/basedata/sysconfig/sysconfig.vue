@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { createVNode, onMounted, reactive, ref } from 'vue';
+  import { createVNode, onMounted, ref } from 'vue';
   import { BasicColumn, BasicTable, TableActionType, useTable } from '/@/components/Table';
   import { message, Modal } from 'ant-design-vue';
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
@@ -142,12 +142,10 @@
       icon: createVNode(ExclamationCircleOutlined),
       maskClosable: true,
       onOk: async () => {
-        let result = await SysConfigApi.deleteConfigType({ dictId: current.value.dictId });
+        let result = await SysConfigApi.deleteConfigType({ dictId: current.value?.dictId });
         message.success(result.message);
         reload();
       },
     });
   };
 </script>
-
-<style></style>

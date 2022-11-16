@@ -101,5 +101,3 @@
     fieldDescription: [{ message: '请输入属性描述', type: 'string', trigger: 'blur' }],
   });
 </script>
-
-<style></style>

@@ -197,7 +197,7 @@
   const [registerTable, { expandAll, collapseAll }] = useTable({
     afterFetch: (data) => {
       orgList.value = data;
-    }
+    },
   });
 
   /**
@@ -238,5 +238,3 @@
     reload();
   };
 </script>
-
-<style></style>
