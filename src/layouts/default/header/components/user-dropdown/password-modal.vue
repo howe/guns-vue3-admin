@@ -33,8 +33,8 @@
     (e: 'update:visible', value: boolean): void;
   }>();
 
-  const props = defineProps<{
-    visible: Boolean;
+  defineProps<{
+    visible: boolean;
   }>();
 
   // 提交loading
