@@ -25,14 +25,14 @@
         v-model:form="state.form"
         ref="formRef"
         :rules="rules"
-        v-model:orgList="orgList"
+        :orgList="orgList"
         v-if="activeKey == '1'"
       >
         <field-expand-form ref="fieldExpandFormRef" expand-code="org_expand" />
       </org-form>
 
       <!-- 设置审批人 -->
-      <set-approver v-else ref="setApproverRef" :data="data"></set-approver>
+      <set-approver v-else ref="setApproverRef" :data="data" />
     </common-drawer>
 
     <!-- 新增 -->
@@ -49,7 +49,7 @@
       v-else
       @close="updateVisible(false)"
     >
-      <org-form v-model:form="state.form" ref="formRef" :rules="rules" v-model:orgList="orgList">
+      <org-form v-model:form="state.form" ref="formRef" :rules="rules" :orgList="orgList">
         <field-expand-form ref="fieldExpandFormRef" expand-code="org_expand" />
       </org-form>
     </a-modal>

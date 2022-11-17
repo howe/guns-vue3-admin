@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { onMounted, nextTick } from 'vue';
   import { ConfigProvider } from 'ant-design-vue';
   import { AppProvider } from '/@/components/Application';
   import { useTitle } from '/@/hooks/web/useTitle';
@@ -18,7 +19,6 @@
   import { useSystemStore } from '/@/store/modules/system';
 
   import 'dayjs/locale/zh-cn';
-  import { onMounted, nextTick } from 'vue-demi';
   // support Multi-language
   const { getAntdLocale } = useLocale();
 

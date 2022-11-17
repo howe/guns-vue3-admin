@@ -11,7 +11,7 @@
       <template #extra>
         <a-button type="primary" @click="save" :loading="loading">确定</a-button>
       </template>
-      <company-form v-model:form="state.form" ref="formRef" v-model:orgList="orgList">
+      <company-form v-model:form="state.form" ref="formRef" :orgList="orgList">
         <field-expand-form ref="fieldExpandFormRef" expand-code="org_expand" />
       </company-form>
     </common-drawer>
@@ -30,7 +30,7 @@
       v-else
       @close="updateVisible(false)"
     >
-      <company-form v-model:form="state.form" ref="formRef" v-model:orgList="orgList">
+      <company-form v-model:form="state.form" ref="formRef" :orgList="orgList">
         <field-expand-form ref="fieldExpandFormRef" expand-code="org_expand" />
       </company-form>
     </a-modal>
