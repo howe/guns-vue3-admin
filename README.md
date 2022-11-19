@@ -6,7 +6,7 @@ Guns 7.3.0，前端采用Vue Vben Admin。使用了最新的`vue3` + `vite2` + `
 
 [Guns文档地址](https://javaguns.com/doc)
 
-[Vben前端文档地址](https://vvbin.cn/doc-next/)
+[Vben前端文档地址](https://github.com/vbenjs/vue-vben-admin)
 
 ## 运行效果
 
